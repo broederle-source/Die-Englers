@@ -106,8 +106,8 @@
 
         /* PROFESSIONELLES PDF LAYOUT (Optimiert gegen Seitensprünge) */
         #pdf-wrapper { 
-            position: absolute; left: -9999px; top: -9999px; 
-            width: 750px; /* Passt perfekt auf A4 mit Rand */
+            position: absolute; left: -9999px; top: 0; 
+            width: 750px; 
             background: white; z-index: -1; 
         }
         #pdf-template { 
@@ -159,6 +159,7 @@
             font-size: 12px; padding: 12px; background: #fdfdfd; 
             border: 1px solid #eee; margin-top: 5px; border-radius: 4px; 
             min-height: 60px; 
+            page-break-inside: avoid; break-inside: avoid;
         }
         #pdf_out_sketch { 
             max-width: 100%; max-height: 300px; display: none; 
@@ -180,6 +181,45 @@
         </div>
     </header>
 
+    <datalist id="rohr_options">
+        <option value="22mm Kupfer (Cu)">
+        <option value="28mm Kupfer (Cu)">
+        <option value="35mm Kupfer (Cu)">
+        <option value="42mm Kupfer (Cu)">
+        <option value="20mm Mehrschichtverbundrohr">
+        <option value="26mm Mehrschichtverbundrohr">
+        <option value="32mm Mehrschichtverbundrohr">
+        <option value="40mm Mehrschichtverbundrohr">
+        <option value="28mm C-Stahl">
+        <option value="35mm C-Stahl">
+        <option value="42mm C-Stahl">
+        <option value="DN25 (1 Zoll Stahlrohr)">
+        <option value="DN32 (1 1/4 Zoll Stahlrohr)">
+    </datalist>
+
+    <datalist id="kabel_options">
+        <option value="NYM-J 5x6 mm²">
+        <option value="NYM-J 5x10 mm²">
+        <option value="NYM-J 5x16 mm²">
+        <option value="NYY-J 5x10 mm² (Erdkabel)">
+        <option value="NYY-J 5x16 mm² (Erdkabel)">
+        <option value="NYY-J 4x35 mm² (Erdkabel)">
+        <option value="NYY-J 4x50 mm² (Erdkabel)">
+        <option value="Einzeladern H07V-K 10 mm² im Rohr">
+        <option value="Einzeladern H07V-K 16 mm² im Rohr">
+    </datalist>
+
+    <datalist id="sicherung_options">
+        <option value="3x 35A SLS">
+        <option value="3x 50A SLS">
+        <option value="3x 63A SLS">
+        <option value="3x 80A NH-Sicherung">
+        <option value="3x 100A NH-Sicherung">
+        <option value="3x 35A Neozed">
+        <option value="3x 50A Neozed">
+        <option value="3x 63A Neozed">
+    </datalist>
+
     <div class="container">
         
         <div id="dashboard_view">
@@ -198,18 +238,18 @@
         </div>
 
         <div id="form_view" class="hidden">
-            <form id="mainForm" action="https://formsubmit.co/familiekohlstaedt@icloud.com" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(event)">
+            <form id="mainForm" action="https://formsubmit.co/familiekohlstaedt@icloud.com" method="POST" enctype="multipart/form-data">
                 
                 <input type="hidden" name="_cc" value="familiekohlstaedt@icloud.com">
                 <input type="hidden" name="_subject" id="email_subject" value="Neue Erfassung">
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_template" value="box">
                 <input type="hidden" name="00_Firma" value="Die Englers GmbH - Sanitär, Heizung, Klima">
                 
                 <input type="file" name="Protokoll_PDF" id="hidden_pdf" style="display:none;">
                 <input type="file" name="Daten_CSV" id="hidden_csv" style="display:none;">
-                <input type="hidden" name="Skizze_Bild" id="hidden_sketch_data">
-                <input type="hidden" name="Erfassungs_Modus" id="app_mode" value="shk">
+                <input type="hidden" id="hidden_sketch_data">
+                <input type="hidden" id="app_mode" value="shk">
                 
                 <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
 
@@ -300,7 +340,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col form-group"><label>Gesamkapazität (Liter)</label><input type="number" id="oeltank_liter" name="Oeltank_Liter" value="3000" oninput="calculateHeizungLogik()"></div>
+                                <div class="col form-group"><label>Gesamtkapazität (Liter)</label><input type="number" id="oeltank_liter" name="Oeltank_Liter" value="3000" oninput="calculateHeizungLogik()"></div>
                                 <div class="col form-group"><label>Anzahl Tanks</label><input type="number" id="oeltank_anzahl" name="Oeltank_Anzahl" value="3" oninput="calculateHeizungLogik()"></div>
                             </div>
                         </div>
@@ -521,8 +561,10 @@
 
                             <div class="compass-container">
                                 <p style="font-size:0.85rem; margin-bottom:10px;">Kompass nutzen und sperren:</p>
-                                <button type="button" class="btn-info" onclick="startCompass()">🧭 Live-Kompass</button>
-                                <button type="button" class="btn-info" style="background:#10b981;" onclick="lockCompass()">🔒 Sperren</button>
+                                <div style="display:flex; justify-content:center; gap:15px; margin-bottom:15px;">
+                                    <button type="button" class="btn-info" onclick="startCompass()">🧭 Live-Kompass</button>
+                                    <button type="button" class="btn-info" style="background:#10b981;" onclick="lockCompass()">🔒 Sperren</button>
+                                </div>
                                 <div id="compass_disc" class="compass-disc"><div class="compass-needle"></div><div class="compass-cardinal north">N</div><div class="compass-cardinal east">O</div><div class="compass-cardinal south">S</div><div class="compass-cardinal west">W</div></div>
                                 <p id="compass_text" style="font-size:0.9rem; font-weight:bold; color:var(--accent-color); margin-top:5px;">Richtung: Manuell</p>
                             </div>
@@ -603,8 +645,8 @@
                         <button type="button" class="btn btn-secondary" onclick="navigateStep(6, -1)">🡨 Zurück</button>
                         <button type="button" class="btn btn-info" onclick="saveDraft()">💾 Entwurf speichern</button>
                     </div>
-                    <button type="button" class="btn btn-secondary" style="margin-top:10px;" onclick="downloadPDF()">📄 PDF manuell speichern</button>
-                    <button type="submit" id="submitBtn" class="btn btn-success" style="margin-top: 15px;">✓ Daten, Skizzen & PDF ans Büro senden</button>
+                    <button type="button" class="btn btn-secondary" style="margin-top:10px;" onclick="downloadPDF(false)">📄 PDF manuell speichern</button>
+                    <button type="submit" id="submitBtn" class="btn btn-success" style="margin-top: 15px;" onclick="handleFormSubmit(event)">✓ Daten, Skizzen & PDF ans Büro senden</button>
                 </div>
             </form>
         </div>
@@ -1431,7 +1473,7 @@
             }
         }
 
-        function downloadPDF() {
+        async function downloadPDF(isSubmit = false) {
             try {
                 updatePDFView();
                 const element = document.getElementById('pdf-template');
@@ -1439,17 +1481,22 @@
                 const kunde = (kName && kName.value) ? kName.value.replace(/\W/g, '_') : 'Kunde';
                 
                 const pdfOptions = { 
-                    margin: [15, 10, 15, 10], // Oben, Rechts, Unten, Links in mm
+                    margin: [15, 10, 15, 10], 
                     filename: `Erfassung_${kunde}.pdf`, 
                     image: { type: 'jpeg', quality: 1.0 }, 
                     html2canvas: { scale: 2, useCORS: true, letterRendering: true }, 
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak: { mode: ['css', 'legacy'] } // Verhindert zerschnittene Textblöcke!
+                    pagebreak: { mode: ['css', 'legacy'], avoid: ['.pdf-section', 'tr'] } 
                 };
                 
-                html2pdf().set(pdfOptions).from(element).save();
+                if(!isSubmit) {
+                    html2pdf().set(pdfOptions).from(element).save();
+                } else {
+                    return await html2pdf().set(pdfOptions).from(element).outputPdf('blob');
+                }
             } catch(e) {
                 alert("Fehler bei der PDF-Erstellung.");
+                return null;
             }
         }
 
@@ -1473,6 +1520,7 @@
             const hSketch = document.getElementById('hidden_sketch_data');
             if(canvas && hSketch) hSketch.value = canvas.toDataURL('image/png');
 
+            // 1. CSV generieren, BEVOR die Feld-Namen gelöscht werden
             let csvContent = "Parameter;Wert\n";
             document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(i => {
                 if(i.name && !i.name.startsWith('_') && i.type !== 'file' && i.type !== 'hidden') {
@@ -1491,35 +1539,32 @@
                 if(hCsv) hCsv.files = dtCsv.files;
             } catch(e) {}
 
+            // 2. PDF generieren und anhängen
             try {
-                updatePDFView();
-                const element = document.getElementById('pdf-template');
-                
-                const pdfOptions = { 
-                    margin: [15, 10, 15, 10],
-                    filename: `Protokoll_${safeKundeName}.pdf`, 
-                    image: { type: 'jpeg', quality: 1.0 }, 
-                    html2canvas: { scale: 2, useCORS: true, letterRendering: true }, 
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak: { mode: ['css', 'legacy'] } // Garantiert schöne Seitenumbrüche!
-                };
-                
-                const pdfBlob = await html2pdf().set(pdfOptions).from(element).outputPdf('blob');
-                const pdfFile = new File([pdfBlob], `Protokoll_${safeKundeName}.pdf`, { type: "application/pdf" });
-                
-                const dtPdf = new DataTransfer(); 
-                dtPdf.items.add(pdfFile);
-                const hPdf = document.getElementById('hidden_pdf');
-                if(hPdf) hPdf.files = dtPdf.files;
+                const pdfBlob = await downloadPDF(true);
+                if(pdfBlob) {
+                    const pdfFile = new File([pdfBlob], `Protokoll_${safeKundeName}.pdf`, { type: "application/pdf" });
+                    const dtPdf = new DataTransfer(); 
+                    dtPdf.items.add(pdfFile);
+                    const hPdf = document.getElementById('hidden_pdf');
+                    if(hPdf) hPdf.files = dtPdf.files;
+                }
             } catch(e) {
-                console.warn("PDF für den Upload konnte nicht erstellt werden", e);
+                console.warn("PDF konnte nicht erstellt werden", e);
             }
+
+            // 3. Felder aus der FormSubmit-Mail löschen (Leere E-Mail mit Anhängen)
+            const keepNames = ['_cc', '_subject', '_captcha', '_template', '00_Firma', 'Protokoll_PDF', 'Daten_CSV'];
+            document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(el => {
+                if (el.name && !keepNames.includes(el.name)) {
+                    el.removeAttribute('name');
+                }
+            });
 
             btn.innerText = "🚀 Sende...";
             document.getElementById('mainForm').submit();
         }
 
-        // Sicherer initialer Aufruf beim Start
         window.addEventListener('DOMContentLoaded', () => {
             loadDrafts();
         });
