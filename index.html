@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>Die Englers GmbH - Profi Erfassung</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <style>
+        /* FARBEN & THEME */
+        :root {
+            --bg-color: #f4f4f5; --card-bg: #ffffff; --text-color: #1a1a1a;
+            --primary-color: #000000; --accent-color: #ff6600; --border-color: #d1d5db;
+            --input-bg: #f9fafb; --input-focus: rgba(255, 102, 0, 0.15);
+        }
+        [data-theme="dark"] {
+            --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e5e5e5;
+            --primary-color: #ff6600; --accent-color: #ffffff; --border-color: #333333;
+            --input-bg: #2d2d2d; --input-focus: rgba(255, 102, 0, 0.3);
+        }
+
+        /* GRUNDLAYOUT */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding-bottom: 40px; transition: all 0.3s; }
+
+        header { background-color: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .header-text h1 { font-size: 1.4rem; margin-bottom: 2px; color: var(--accent-color); }
+        .header-text p { font-size: 0.8rem; opacity: 0.9; }
+        .header-actions { display: flex; gap: 10px; }
+        .icon-btn { background: none; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
+        .icon-btn:hover { background: var(--accent-color); color: #000; }
+
+        .container { max-width: 750px; margin: 20px auto; padding: 0 15px; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .card h2 { color: var(--primary-color); font-size: 1.25rem; margin-bottom: 20px; border-left: 5px solid var(--accent-color); padding-left: 10px; }
+
+        /* FORMULARE & EINGABEN */
+        .form-group { margin-bottom: 18px; width: 100%; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-color); }
+        input[type="text"], input[type="number"], select, textarea { 
+            width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; 
+            font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); 
+            min-height: 48px; /* Einheitliche Höhe für Inputs und Selects */
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--input-focus); }
+        
+        /* Inline-Gruppen (Input + Button nebeneinander) */
+        .input-group { display: flex; gap: 10px; align-items: stretch; }
+        .input-group input { flex: 1; }
+        .input-group .btn-info { margin: 0; white-space: nowrap; }
+
+        .row { display: flex; flex-wrap: wrap; gap: 15px; }
+        .col { flex: 1 1 calc(50% - 15px); min-width: 180px; }
+
+        .radio-checkbox-group { display: flex; gap: 10px; margin-top: 5px; flex-wrap: wrap; width: 100%; }
+        .radio-btn { display: flex; align-items: center; justify-content: center; background: var(--input-bg); padding: 12px 15px; border-radius: 8px; cursor: pointer; flex: 1 1 auto; min-width: 100px; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-color); text-align: center; }
+        input[type="radio"], input[type="checkbox"], input[type="file"] { display: none; }
+        input[type="radio"]:checked + .radio-btn, input[type="checkbox"]:checked + .radio-btn { background-color: var(--input-focus); border-color: var(--accent-color); color: var(--accent-color); font-weight: bold; }
+
+        /* FOTOS & UPLOADS */
+        .file-input-wrapper { position: relative; margin-top: 8px; width: 100%; }
+        .file-label { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--input-bg); border: 2px dashed var(--border-color); padding: 15px; border-radius: 8px; cursor: pointer; font-weight: 500; text-align: center; color: var(--text-color); width: 100%; transition: 0.3s; }
+        .file-label:hover { border-color: var(--accent-color); }
+        .img-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .img-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color); }
+
+        /* BUTTONS */
+        .btn { display: block; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; text-align: center; margin-top: 15px; }
+        .btn-primary { background-color: var(--primary-color); color: white; border: 1px solid var(--primary-color); }
+        .btn-primary:hover { background-color: var(--accent-color); color: #000; border-color: var(--accent-color); }
+        .btn-success { background-color: var(--accent-color); color: #000; }
+        .btn-success:hover { background-color: #e65c00; color: white; }
+        .btn-secondary { background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); }
+        .btn-info { background-color: var(--primary-color); color: white; padding: 10px 15px; font-size: 0.9rem; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; transition: 0.3s; }
+        .btn-info:hover { background-color: var(--accent-color); color: #000; }
+        .btn-danger { background-color: #ef4444; color: white; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; width: 100%; }
+        .btn-group .btn { flex: 1; margin-top: 0; min-width: 120px; }
+        .hidden { display: none !important; }
+
+        /* DASHBOARD & WIZARD */
+        #dashboard_view { animation: fadeIn 0.4s; }
+        .route-card { background: var(--card-bg); border: 2px solid var(--accent-color); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
+        .route-card:hover { background: var(--input-focus); transform: translateY(-2px); }
+        .draft-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 10px; }
+        
+        .step { display: none; animation: fadeIn 0.4s; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar { background: var(--border-color); border-radius: 10px; height: 8px; margin-bottom: 25px; overflow: hidden; }
+        .progress-fill { background: var(--accent-color); height: 100%; width: 0%; transition: width 0.3s; }
+        .live-calc-box { background-color: var(--input-focus); border: 1px solid var(--accent-color); padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .live-calc-box h4 { color: var(--primary-color); margin-bottom: 8px; font-size: 0.95rem; }
+        
+        /* SPEZIAL: Scanner, Canvas, Kompass */
+        #scanner_modal { display:none; position:fixed; top:10%; left:5%; width:90%; background:var(--card-bg); padding:20px; border-radius:12px; z-index:1000; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        #reader { width: 100%; border-radius: 8px; overflow: hidden; margin-top: 10px; }
+        #sketchpad { border: 2px solid var(--border-color); border-radius: 8px; background: #fff; width: 100%; height: 300px; touch-action: none; cursor: crosshair; }
+        
+        .compass-container { text-align: center; background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 10px; }
+        .compass-disc { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary-color); margin: 15px auto; position: relative; background: radial-gradient(circle, var(--card-bg) 40%, var(--input-bg) 100%); transition: transform 0.1s ease-out; }
+        .compass-needle { width: 4px; height: 100px; background: linear-gradient(to bottom, red 50%, var(--text-color) 50%); position: absolute; top: 6px; left: 54px; }
+        .compass-cardinal { position: absolute; font-weight: bold; font-size: 0.8rem; color: var(--text-color); }
+        .north { top: 2px; left: 51px; color: red; } .east { top: 48px; right: 6px; } .south { bottom: 2px; left: 53px; } .west { top: 48px; left: 6px; }
+
+        /* PDF Layout */
+        #pdf-wrapper { position: absolute; left: -9999px; top: -9999px; width: 800px; background: white; z-index: -1; }
+        #pdf-template { padding: 40px; background: white; color: #000; }
+        .pdf-header { display: flex; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+        .pdf-title { font-size: 24px; color: #ff6600; font-weight: bold; }
+        .pdf-company { text-align: right; font-size: 14px; color: #333; }
+        .pdf-section { margin-bottom: 25px; page-break-inside: avoid; }
+        .pdf-table tr { page-break-inside: avoid; }
+        .pdf-section h3 { font-size: 16px; color: #000; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 12px; }
+        .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; font-size: 12px; }
+        .pdf-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .pdf-table th { background-color: #f1f1f1; color: #000; }
+        .pdf-notes { font-size: 12px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; margin-top: 5px; }
+        #pdf_out_sketch { max-width: 100%; max-height: 250px; display: none; margin-top: 10px; border: 1px solid #ccc;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-text">
+            <h1>Die Englers GmbH</h1>
+            <p>Profi Erfassungs-Hub</p>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="showDashboard()" title="Home / Dashboard">🏠</button>
+            <button class="icon-btn" onclick="toggleTheme()" title="Design wechseln">🌗</button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div id="dashboard_view">
+            <h2>Neues Projekt starten:</h2>
+            <div class="route-card" onclick="startNewForm('shk')">
+                <h3 style="text-shadow: none;">🔥 SHK / Komplett-Heizung</h3>
+                <p style="font-size:0.85rem; color:gray;">Volles Programm: Heizlast, Öltanks, PV, Heizkreise & Förderung</p>
+            </div>
+            <div class="route-card" onclick="startNewForm('elektro')">
+                <h3 style="text-shadow: none;">⚡ Nur Elektro / PV / Zähler</h3>
+                <p style="font-size:0.85rem; color:gray;">Spezifische Erfassung: Dach, Zählerumbau, Hausanschluss & Wallbox</p>
+            </div>
+            
+            <h2 style="margin-top:40px;">📂 Gespeicherte Entwürfe</h2>
+            <div id="drafts_list"></div>
+        </div>
+
+        <div id="form_view" class="hidden">
+            <form id="mainForm" action="https://formsubmit.co/s.kohlstaedt@engleronline.de" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(event)">
+                
+                <input type="hidden" name="_cc" value="familiekohlstaedt@icloud.com">
+                <input type="hidden" name="_subject" id="email_subject" value="Neue Erfassung">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="00_Firma" value="Die Englers GmbH - Sanitär, Heizung, Klima">
+                
+                <input type="file" name="Protokoll_PDF" id="hidden_pdf" style="display:none;">
+                <input type="file" name="Daten_CSV" id="hidden_csv" style="display:none;">
+                <input type="hidden" name="Skizze_Bild" id="hidden_sketch_data">
+                <input type="hidden" name="Erfassungs_Modus" id="app_mode" value="shk">
+                
+                <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+                <div class="step" id="step-1">
+                    <div class="card">
+                        <h2>1. Allgemeines & Kunde</h2>
+                        <div class="form-group">
+                            <label for="bearbeiter">Bearbeiter des Angebotes *</label>
+                            <select id="bearbeiter" name="Bearbeiter" required>
+                                <option value="">-- Bitte wählen --</option>
+                                <option value="Jonas Kohlstädt">Jonas Kohlstädt</option>
+                                <option value="Simon Kohlstädt">Simon Kohlstädt</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kunde_name">Name des Kunden *</label>
+                            <input type="text" id="kunde_name" name="Kunde_Name" required placeholder="Max Mustermann">
+                        </div>
+                        <div class="form-group">
+                            <label for="kunde_anschrift">Anschrift / Bauvorhaben *</label>
+                            <textarea id="kunde_anschrift" name="Kunde_Anschrift" rows="2" required placeholder="Musterstraße 1, 35216 Biedenkopf"></textarea>
+                            <button type="button" class="btn-info" style="margin-top:8px; width:100%;" onclick="getGPSLocation()">📍 Aktuellen GPS-Standort abrufen</button>
+                            <input type="text" id="gps_link" name="GPS_Standort_Maps" readonly placeholder="Noch kein Standort erfasst..." style="margin-top:5px; background:var(--bg-color); font-size:0.85rem;">
+                        </div>
+                        <div class="row">
+                            <div class="col form-group">
+                                <label for="wohnflaeche">Wohnfläche (m²) *</label>
+                                <input type="number" id="wohnflaeche" name="Wohnflaeche_m2" required min="10" placeholder="150" oninput="calculateHeizungLogik()">
+                            </div>
+                            <div class="col form-group">
+                                <label for="parteien">Anzahl Wohneinheiten *</label>
+                                <input type="number" id="parteien" name="Anzahl_Parteien" required min="1" value="1" oninput="calculateHeizungLogik()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="saveDraft()">💾 Entwurf speichern</button>
+                        <button type="button" class="btn btn-primary" onclick="navigateStep(1, 1)">Weiter ➔</button>
+                    </div>
+                </div>
+
+                <div class="step" id="step-2">
+                    <div class="card">
+                        <h2>2. Bestand & Verbrauch</h2>
+                        
+                        <div class="form-group">
+                            <label>Serien-/Gerätenummer Altgerät</label>
+                            <div class="input-group">
+                                <input type="text" id="sn_bestand" name="SN_Altgeraet" placeholder="Tippen oder scannen...">
+                                <button type="button" class="btn-info" onclick="startScanner('sn_bestand')">📷 Scan</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Jahresverbrauch (nur Zutreffendes ausfüllen)</label>
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col form-group"><label style="font-weight:normal;">Öl (Liter)</label><input type="number" id="verb_oel" name="Verbrauch_Oel_L" placeholder="z.B. 3000" oninput="calculateHeizungLogik()"></div>
+                                <div class="col form-group"><label style="font-weight:normal;">Gas (kWh)</label><input type="number" id="verb_gas" name="Verbrauch_Gas_kWh" placeholder="z.B. 25000" oninput="calculateHeizungLogik()"></div>
+                                <div class="col form-group"><label style="font-weight:normal;">Holz (rm)</label><input type="number" id="verb_holz" name="Verbrauch_Holz_rm" placeholder="z.B. 10" oninput="calculateHeizungLogik()"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col form-group">
+                                <label>Zirkulation (Kalt/Warm) vorhanden?</label>
+                                <div class="radio-checkbox-group">
+                                    <label><input type="radio" name="Zirkulation" value="Ja" checked><span class="radio-btn">Ja</span></label>
+                                    <label><input type="radio" name="Zirkulation" value="Nein"><span class="radio-btn">Nein</span></label>
+                                </div>
+                            </div>
+                            <div class="col form-group">
+                                <label>Thermostatventile voreinstellbar?</label>
+                                <div class="radio-checkbox-group">
+                                    <label><input type="radio" name="Thermostatventile_Voreinstellbar" value="Ja"><span class="radio-btn">Ja</span></label>
+                                    <label><input type="radio" name="Thermostatventile_Voreinstellbar" value="Nein" checked><span class="radio-btn">Nein</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="oeltank_details" class="hidden" style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px;">
+                            <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 10px;">Details Öltank-Demontage</label>
+                            <div class="form-group">
+                                <label>Material des Öltanks</label>
+                                <div class="radio-checkbox-group">
+                                    <label><input type="radio" name="Oeltank_Material" value="Kunststoff" checked onchange="calculateHeizungLogik()"><span class="radio-btn">Kunststoff</span></label>
+                                    <label><input type="radio" name="Oeltank_Material" value="Metall" onchange="calculateHeizungLogik()"><span class="radio-btn">Metall</span></label>
+                                    <label><input type="radio" name="Oeltank_Material" value="Beides" onchange="calculateHeizungLogik()"><span class="radio-btn">Beides</span></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col form-group"><label>Gesamtkapazität (Liter)</label><input type="number" id="oeltank_liter" name="Oeltank_Liter" value="3000" oninput="calculateHeizungLogik()"></div>
+                                <div class="col form-group"><label>Anzahl Tanks</label><input type="number" id="oeltank_anzahl" name="Oeltank_Anzahl" value="3" oninput="calculateHeizungLogik()"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="navigateStep(2, -1)">🡨 Zurück</button>
+                        <button type="button" class="btn btn-primary" onclick="navigateStep(2, 1)">Weiter ➔</button>
+                    </div>
+                </div>
+
+                <div class="step" id="step-3">
+                    <div class="card">
+                        <h2>3. Heizkreise & Anschlüsse</h2>
+                        <div class="form-group">
+                            <label for="heizkreise">Anzahl der Heizkreise *</label>
+                            <input type="number" id="heizkreise" name="Heizkreise_Anzahl" required min="1" value="1" oninput="generateHKFields()">
+                        </div>
+                        
+                        <div id="hk_container">
+                            </div>
+
+                        <div class="live-calc-box">
+                            <h4>Smart-Formel Analyse (Vorschau):</h4>
+                            <p id="calc_heizlast">Geschätzte Heizlast: <strong>-- kW</strong></p>
+                            <p id="calc_speicher">Empf. Pufferspeicher: <strong>-- Liter</strong></p>
+                            <p id="calc_demontage" class="hidden">Demontage Öltank: <strong>--</strong></p>
+                        </div>
+
+                        <div class="file-input-wrapper">
+                            <label>Foto: Alt-Heizung / Typenschild</label>
+                            <label class="file-label">📸 Kamera / Foto öffnen<input type="file" name="Bild_Bestand_Heizung" accept="image/*" capture="environment" onchange="compressAndRenameImage(this, 'prev_bestand', '01_Bestandsanlage')"></label>
+                            <div id="prev_bestand" class="img-preview"></div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="navigateStep(3, -1)">🡨 Zurück</button>
+                        <button type="button" class="btn btn-primary" onclick="navigateStep(3, 1)">Weiter ➔</button>
+                    </div>
+                </div>
+
+                <div class="step" id="step-4">
+                    <div class="card">
+                        <h2>4. Neuplanung & Aufstellort</h2>
+                        <div class="form-group">
+                            <label>Gewünschtes Warmwassersystem</label>
+                            <div class="radio-checkbox-group">
+                                <label><input type="radio" name="Warmwasserpuffer_Art" value="Kompakt" checked><span class="radio-btn">Kompakt</span></label>
+                                <label><input type="radio" name="Warmwasserpuffer_Art" value="Getrennt"><span class="radio-btn">Getrennt</span></label>
+                                <label><input type="radio" name="Warmwasserpuffer_Art" value="Energiespeicher mit Frischwasserstation"><span class="radio-btn">Energiespeicher (FriWa)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Aufstellort & Art</label>
+                            <select id="aufstellort" name="Aufstellort_Art">
+                                <option value="Boden an Haus">Boden am Haus (Wärmepumpe)</option>
+                                <option value="Boden fern von Haus">Boden fern vom Haus</option>
+                                <option value="Wand an Haus">Wandmontage am Haus</option>
+                            </select>
+                        </div>
+
+                        <div class="file-input-wrapper">
+                            <label>Foto: Vorgesehener Aufstellort</label>
+                            <label class="file-label">📸 Kamera / Foto öffnen<input type="file" name="Bild_Aufstellort_Neu" accept="image/*" capture="environment" onchange="compressAndRenameImage(this, 'prev_aufstellort', '02_Neuer_Aufstellort')"></label>
+                            <div id="prev_aufstellort" class="img-preview"></div>
+                        </div>
+
+                        <div class="file-input-wrapper" style="margin-top:20px;">
+                            <label style="color:var(--accent-color);">3D-Raumscan / LiDAR Datei (Optional)</label>
+                            <p style="font-size:0.8rem; color:#666; margin-bottom:5px;">Scanne den Raum mit einer App (z.B. Polycam) und lade die Datei hoch.</p>
+                            <label class="file-label" style="border-color:var(--accent-color);">📂 Scan-Datei anhängen<input type="file" name="Lidar_3D_Scan" accept=".usdz,.obj,.pdf,.zip" onchange="showFileName(this, 'lidar_file_name')"></label>
+                            <p id="lidar_file_name" style="font-size:0.8rem; font-weight:bold; margin-top:5px;"></p>
+                        </div>
+
+                        <div class="form-group" style="margin-top:25px;">
+                            <label>Handskizze (Leitungswege / Platzbedarf)</label>
+                            <canvas id="sketchpad"></canvas>
+                            <button type="button" class="btn-info btn-danger" style="margin-top:5px; float:right;" onclick="clearSketch()">Skizze löschen</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="navigateStep(4, -1)">🡨 Zurück</button>
+                        <button type="button" class="btn btn-primary" onclick="navigateStep(4, 1)">Weiter ➔</button>
+                    </div>
+                </div>
+
+                <div class="step" id="step-5">
+                    <div class="card">
+                        <h2>5. Elektro & Zählerschrank</h2>
+                        
+                        <div class="form-group">
+                            <label>Zählernummer / ID</label>
+                            <div class="input-group">
+                                <input type="text" id="sn_zaehler" name="Zaehlernummer" placeholder="Tippen oder scannen...">
+                                <button type="button" class="btn-info" onclick="startScanner('sn_zaehler')">📷 Scan</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col form-group">
+                                <label>Art des Hausanschlusses</label>
+                                <div class="radio-checkbox-group">
+                                    <label><input type="radio" name="Hausanschluss_Art" value="Erdkabel" checked><span class="radio-btn">Erdkabel</span></label>
+                                    <label><input type="radio" name="Hausanschluss_Art" value="Dachständer"><span class="radio-btn">Dachständer</span></label>
+                                </div>
+                            </div>
+                            <div class="col form-group">
+                                <label>Zählerschrank Zustand</label>
+                                <div class="radio-checkbox-group">
+                                    <label><input type="radio" name="Zaehlerschrank_Zustand" value="Erneuerung zwingend" checked><span class="radio-btn">Neu nötig</span></label>
+                                    <label><input type="radio" name="Zaehlerschrank_Zustand" value="Erweiterung möglich"><span class="radio-btn">Erweitern</span></label>
+                                    <label><input type="radio" name="Zaehlerschrank_Zustand" value="OK"><span class="radio-btn">Ist OK</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col form-group">
+                                <label>Zuleitung / Hauptleitung (Kabeltyp) *</label>
+                                <select id="sel_kabel" name="Zuleitung_Kabeltyp" required onchange="toggleCustomInput(this, 'cust_kabel')">
+                                    <option value="">-- Auswählen --</option>
+                                    <option value="NYM-J 5x6 mm²">NYM-J 5x6 mm²</option>
+                                    <option value="NYM-J 5x10 mm²">NYM-J 5x10 mm²</option>
+                                    <option value="NYM-J 5x16 mm²">NYM-J 5x16 mm²</option>
+                                    <option value="NYY-J 5x10 mm² (Erdkabel)">NYY-J 5x10 mm² (Erdkabel)</option>
+                                    <option value="NYY-J 5x16 mm² (Erdkabel)">NYY-J 5x16 mm² (Erdkabel)</option>
+                                    <option value="NYY-J 4x35 mm² (Erdkabel)">NYY-J 4x35 mm² (Erdkabel)</option>
+                                    <option value="NYY-J 4x50 mm² (Erdkabel)">NYY-J 4x50 mm² (Erdkabel)</option>
+                                    <option value="Einzeladern H07V-K 10 mm² im Rohr">Einzeladern H07V-K 10 mm² im Rohr</option>
+                                    <option value="Einzeladern H07V-K 16 mm² im Rohr">Einzeladern H07V-K 16 mm² im Rohr</option>
+                                    <option value="Sonstiges">Sonstiges (Händisch eintragen)</option>
+                                </select>
+                                <input type="text" id="cust_kabel" class="hidden" placeholder="Bitte Kabeltyp eintragen..." style="margin-top:8px;">
+                            </div>
+                            <div class="col form-group">
+                                <label>Hauptabsicherung / Wert *</label>
+                                <select id="sel_sicherung" name="Hauptabsicherung_Wert" required onchange="toggleCustomInput(this, 'cust_sicherung')">
+                                    <option value="">-- Auswählen --</option>
+                                    <option value="3x 35A SLS">3x 35A SLS</option>
+                                    <option value="3x 50A SLS">3x 50A SLS</option>
+                                    <option value="3x 63A SLS">3x 63A SLS</option>
+                                    <option value="3x 80A NH-Sicherung">3x 80A NH-Sicherung</option>
+                                    <option value="3x 100A NH-Sicherung">3x 100A NH-Sicherung</option>
+                                    <option value="3x 35A Neozed">3x 35A Neozed</option>
+                                    <option value="3x 50A Neozed">3x 50A Neozed</option>
+                                    <option value="3x 63A Neozed">3x 63A Neozed</option>
+                                    <option value="Sonstiges">Sonstiges (Händisch eintragen)</option>
+                                </select>
+                                <input type="text" id="cust_sicherung" class="hidden" placeholder="Bitte Absicherung eintragen..." style="margin-top:8px;">
+                            </div>
+                        </div>
+
+                        <hr style="border: 0; height: 1px; background: var(--border-color); margin: 25px 0;">
+
+                        <div class="form-group">
+                            <label>Mit Wallbox?</label>
+                            <div class="radio-checkbox-group">
+                                <label><input type="radio" name="Wallbox" value="Ja" onchange="toggleWallboxSection(true)"><span class="radio-btn">Ja</span></label>
+                                <label><input type="radio" name="Wallbox" value="Nein" checked onchange="toggleWallboxSection(false)"><span class="radio-btn">Nein</span></label>
+                            </div>
+                        </div>
+                        
+                        <div id="wallbox_section" class="hidden" style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                            <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 10px;">Wallbox Montage-Details</label>
+                            <div class="row">
+                                <div class="col form-group"><label>Leitungsweg (Meter)</label><input type="number" name="Wallbox_Leitungsweg_m" placeholder="z.B. 15"></div>
+                                <div class="col form-group"><label>Wanddurchbrüche?</label><input type="number" name="Wallbox_Durchbrueche_Anzahl" placeholder="z.B. 2"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Smart Home Integration?</label>
+                            <div class="radio-checkbox-group">
+                                <label><input type="radio" name="Smart_Home" value="Ja"><span class="radio-btn">Ja</span></label>
+                                <label><input type="radio" name="Smart_Home" value="Nein" checked><span class="radio-btn">Nein</span></label>
+                            </div>
+                        </div>
+
+                        <hr style="border: 0; height: 1px; background: var(--border-color); margin: 25px 0;">
+
+                        <div class="form-group">
+                            <label>Photovoltaik-Anlage (PV)?</label>
+                            <div class="radio-checkbox-group">
+                                <label><input type="radio" name="PV_Anlage" value="Ja" onchange="togglePVSection(true)"><span class="radio-btn">Ja</span></label>
+                                <label><input type="radio" name="PV_Anlage" value="Nein" checked onchange="togglePVSection(false)"><span class="radio-btn">Nein</span></label>
+                            </div>
+                        </div>
+
+                        <div id="pv_section" class="hidden" style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px;">
+                            <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 10px;">PV-Dimensionierung & Dach</label>
+                            
+                            <div class="row">
+                                <div class="col form-group">
+                                    <label>Dacheindeckung</label>
+                                    <select name="PV_Dacheindeckung">
+                                        <option value="Ziegel (Standard)">Ton-/Betonziegel</option><option value="Trapezblech">Trapezblech</option>
+                                        <option value="Flachdach">Flachdach</option><option value="Schiefer">Schiefer</option>
+                                        <option value="Welleternit (Asbestfrei)">Welleternit (Asbestfrei)</option><option value="Sonstiges">Sonstiges</option>
+                                    </select>
+                                </div>
+                                <div class="col form-group">
+                                    <label>Fassadengerüst nötig?</label>
+                                    <div class="radio-checkbox-group" style="margin-top:0;">
+                                        <label><input type="radio" name="PV_Geruest" value="Ja" checked><span class="radio-btn" style="padding:10px;">Ja</span></label>
+                                        <label><input type="radio" name="PV_Geruest" value="Nein"><span class="radio-btn" style="padding:10px;">Nein</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col form-group"><label for="dachflaeche">Dachfläche (m²)</label><input type="number" id="dachflaeche" name="PV_Dachflaeche_m2" placeholder="z.B. 80" oninput="calculatePVLogik()"></div>
+                                <div class="col form-group"><label>Himmelsrichtung</label><select id="himmelsrichtung" name="PV_Himmelsrichtung" onchange="calculatePVLogik()"><option value="Süden">Süden (Optimal)</option><option value="Süd-West">Süd-West</option><option value="Süd-Ost">Süd-Ost</option><option value="Osten">Osten</option><option value="Westen">Westen</option><option value="Norden">Norden</option></select></div>
+                            </div>
+
+                            <div class="compass-container">
+                                <p style="font-size:0.85rem; margin-bottom:10px;">Kompass nutzen und sperren:</p>
+                                <button type="button" class="btn-info" onclick="startCompass()">🧭 Live-Kompass</button>
+                                <button type="button" class="btn-info" style="background:#10b981;" onclick="lockCompass()">🔒 Sperren</button>
+                                <div id="compass_disc" class="compass-disc"><div class="compass-needle"></div><div class="compass-cardinal north">N</div><div class="compass-cardinal east">O</div><div class="compass-cardinal south">S</div><div class="compass-cardinal west">W</div></div>
+                                <p id="compass_text" style="font-size:0.9rem; font-weight:bold; color:var(--accent-color); margin-top:5px;">Richtung: Manuell</p>
+                            </div>
+
+                            <div class="row" style="margin-top:15px;">
+                                <div class="col form-group">
+                                    <label>Stromspeicher gewünscht?</label>
+                                    <div class="radio-checkbox-group">
+                                        <label><input type="radio" name="PV_Speicher_Gewuenscht" value="Ja" checked><span class="radio-btn">Ja</span></label>
+                                        <label><input type="radio" name="PV_Speicher_Gewuenscht" value="Nein"><span class="radio-btn">Nein</span></label>
+                                    </div>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="speicher_groesse">Speichergröße (kWh)</label>
+                                    <div class="input-group">
+                                        <input type="number" id="speicher_groesse" name="PV_Speicher_Groesse_kWh" placeholder="Automatik">
+                                        <button type="button" class="btn-info" onclick="applyRecommendedBattery()">✅ Übernehmen</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="live-calc-box"><h4>Analyse:</h4><p id="calc_pv_kwp">Maximaler Ertrag: <strong>-- kWp</strong></p><p id="calc_pv_speicher_empf">Empfohlener Speicher: <strong>-- kWh</strong></p></div>
+                        </div>
+
+                        <div class="file-input-wrapper">
+                            <label>Foto: Zählerschrank / Dachfläche</label>
+                            <label class="file-label">📸 Kamera / Foto öffnen<input type="file" name="Bild_Elektro_Zaehler" accept="image/*" capture="environment" onchange="compressAndRenameImage(this, 'prev_elektro', '03_Elektro_Zaehler_Dach')"></label>
+                            <div id="prev_elektro" class="img-preview"></div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="navigateStep(5, -1)">🡨 Zurück</button>
+                        <button type="button" class="btn btn-primary" onclick="navigateStep(5, 1)">Weiter ➔</button>
+                    </div>
+                </div>
+
+                <div class="step" id="step-6">
+                    <div class="card">
+                        <h2>6. Abschluss & Notizen</h2>
+                        
+                        <div id="shk_abschluss_details">
+                            <div class="form-group">
+                                <label>Alter Alt-Heizung (Jahre)</label>
+                                <input type="number" id="alter_heizung" name="Alter_Bestandsheizung" placeholder="z.B. 22">
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:15px;">
+                            <div class="col form-group">
+                                <label>Nutzungsart Objekt</label>
+                                <select name="Objekt_Nutzungsart"><option value="Selbst bewohnt">Selbst bewohnt</option><option value="Vermietet">Vermietet</option></select>
+                            </div>
+                            <div class="col form-group">
+                                <label>Finanzierung gewünscht?</label>
+                                <div class="radio-checkbox-group" style="margin-top:0;">
+                                    <label><input type="radio" name="Finanzierung" value="Ja" onchange="toggleFinanzSection(true)"><span class="radio-btn" style="padding:10px;">Ja</span></label>
+                                    <label><input type="radio" name="Finanzierung" value="Nein" checked onchange="toggleFinanzSection(false)"><span class="radio-btn" style="padding:10px;">Nein</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="finanz_section" class="hidden" class="form-group">
+                            <label for="finanz_bank">Bevorzugtes Kreditinstitut</label>
+                            <select id="finanz_bank" name="Finanzierung_Bank">
+                                <option value="Volksbank (VR)">Volksbank (VR-Bank)</option><option value="Sparkasse">Sparkasse</option><option value="Andere">Andere / Hausbank</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top:20px;">
+                            <label>Besonderheiten / Notizen</label>
+                            <div style="position:relative;">
+                                <textarea id="notizen" name="Besonderheiten" rows="4" placeholder="Besonderheiten hier eintragen..."></textarea>
+                                <button type="button" class="btn-info" style="position:absolute; bottom:10px; right:10px; background:var(--accent-color);" onclick="startDictation()" title="Spracheingabe">🎤 Diktieren</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="navigateStep(6, -1)">🡨 Zurück</button>
+                        <button type="button" class="btn btn-info" onclick="saveDraft()">💾 Entwurf speichern</button>
+                    </div>
+                    <button type="button" class="btn btn-secondary" style="margin-top:10px;" onclick="downloadPDF()">📄 PDF manuell speichern</button>
+                    <button type="submit" id="submitBtn" class="btn btn-success" style="margin-top: 15px;">✓ Daten, Skizzen & PDF ans Büro senden</button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="scanner_modal" style="display:none; position:fixed; top:10%; left:5%; width:90%; background:var(--card-bg); padding:20px; border-radius:12px; z-index:1000; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+            <h3 style="color:var(--text-color); margin-bottom:10px;">Barcode scannen</h3>
+            <div id="reader"></div>
+            <button type="button" class="btn btn-danger" onclick="closeScanner()">Abbrechen</button>
+        </div>
+    </div>
+
+    <div id="pdf-wrapper">
+        <div id="pdf-template">
+            <div class="pdf-header">
+                <div><div class="pdf-title">TECHNISCHES PROTOKOLL</div><div style="font-size:12px; margin-top:5px; color:#475569;">Erstellt am: <span id="pdf_date"></span></div></div>
+                <div class="pdf-company"><strong>Die Englers GmbH</strong><br>Sanitär - Heizung - Klima - Elektro</div>
+            </div>
+            <div class="pdf-section">
+                <h3>Allgemeine Projektdaten</h3>
+                <div class="pdf-grid">
+                    <div class="pdf-item"><span>Kunde/Objekt:</span> <div id="pdf_out_kunde"></div></div>
+                    <div class="pdf-item"><span>Anschrift:</span> <div id="pdf_out_anschrift"></div></div>
+                    <div class="pdf-item"><span>Wohnfläche / WE:</span> <div id="pdf_out_flaeche"></div></div>
+                    <div class="pdf-item"><span>Zuständiger Bearbeiter:</span> <div id="pdf_out_bearbeiter" style="color:#000; font-weight:bold;"></div></div>
+                    <div class="pdf-item" style="grid-column: span 2;"><span>GPS/Standort:</span> <div id="pdf_out_gps" style="font-weight:normal;">--</div></div>
+                </div>
+            </div>
+            
+            <div id="pdf_shk_block">
+                <div class="pdf-section">
+                    <h3>Bestand & Energetische Analyse</h3>
+                    <table class="pdf-table">
+                        <thead><tr><th>Parameter</th><th>Bestandswert</th><th>Berechnete Zielwerte</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Energieverbrauch</strong></td><td id="pdf_out_verbrauch">--</td><td id="pdf_out_heizlast" style="font-weight:bold;">Heizlast: -- kW</td></tr>
+                            <tr><td><strong>Öltank-Demontage</strong></td><td id="pdf_out_oeltank">Nein</td><td id="pdf_out_demontage_kosten">--</td></tr>
+                            <tr><td><strong>Zirkulation & Warmwasser</strong></td><td id="pdf_out_zirkulation">--</td><td id="pdf_out_speicher_empf">Pufferspeicher: -- L</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pdf-section">
+                    <h3>Heizkreise & Systemtemperaturen</h3>
+                    <p style="font-size: 12px; margin-bottom:5px;">Hydraulischer Abgleich erforderlich? <strong id="pdf_out_abgleich">--</strong></p>
+                    <table class="pdf-table" id="pdf_hk_table">
+                        <thead><tr><th>Heizkreis</th><th>Vorlauftemperatur (°C)</th><th>Rohrdurchmesser / Anschluss</th></tr></thead>
+                        <tbody id="pdf_out_hk_body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="pdf-section">
+                <h3>Elektro, PV & Netzinfrastruktur</h3>
+                <table class="pdf-table">
+                    <thead><tr><th>Gewerk / Komponente</th><th>Auswahl / Details</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Zählerschrank & Anschluss</strong></td><td id="pdf_out_zaehler">--</td></tr>
+                        <tr><td><strong>Kabel & Absicherung (Zuleitung)</strong></td><td id="pdf_out_kabel_sicherung">--</td></tr>
+                        <tr><td><strong>Wallbox & Smart Home</strong></td><td id="pdf_out_wallbox_sh">--</td></tr>
+                        <tr><td><strong>Photovoltaik-System</strong></td><td id="pdf_out_pv_details">--</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pdf-section">
+                <h3>Notizen & Skizze</h3>
+                <div class="pdf-notes" id="pdf_out_notes">Keine Notizen hinterlegt.</div>
+                <img id="pdf_out_sketch" src="" alt="Handskizze">
+            </div>
+            <div class="pdf-section" style="margin-top:20px; padding-top:15px; border-top:1px solid #ccc;">
+                <div style="margin-top:30px; display:flex; justify-content:space-between; font-size:12px; color:#000;">
+                    <div>______________________________________<br>Unterschrift Bearbeiter</div>
+                    <div>______________________________________<br>Unterschrift Kunde</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Theme Logic ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        }
+
+        let currentMode = 'shk'; 
+        let activeSteps = []; 
+
+        function showDashboard() {
+            document.getElementById('form_view').classList.add('hidden');
+            document.getElementById('dashboard_view').classList.remove('hidden');
+            loadDrafts();
+        }
+
+        function startNewForm(mode) {
+            currentMode = mode;
+            document.getElementById('app_mode').value = mode;
+            document.getElementById('mainForm').reset();
+            document.getElementById('gps_link').value = '';
+            
+            // Custom Inputs wieder verstecken und Selects bereinigen
+            document.querySelectorAll('select').forEach(sel => { if(sel.id && sel.id.startsWith('sel_')) { sel.name = sel.dataset.baseName || sel.name; sel.dataset.baseName = sel.name; } });
+            document.querySelectorAll('input.hidden[id^="cust_"]').forEach(inp => { input.classList.add('hidden'); input.removeAttribute('name'); });
+
+            clearSketch();
+            
+            if(mode === 'elektro') {
+                activeSteps = [1, 5, 6]; 
+                document.getElementById('pdf_shk_block').style.display = 'none';
+                document.getElementById('shk_abschluss_details').style.display = 'none';
+            } else {
+                activeSteps = [1, 2, 3, 4, 5, 6]; 
+                document.getElementById('pdf_shk_block').style.display = 'block';
+                document.getElementById('shk_abschluss_details').style.display = 'block';
+            }
+            
+            document.getElementById('dashboard_view').classList.add('hidden');
+            document.getElementById('form_view').classList.remove('hidden');
+            
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step-' + activeSteps[0]).classList.add('active');
+            updateProgress(activeSteps[0]);
+            
+            if(mode === 'shk') generateHKFields();
+        }
+
+        // --- CUSTOM DROPDOWN LOGIK ---
+        // Dies tauscht das 'name' Attribut dynamisch, damit immer nur der richtige Wert an die E-Mail/CSV geschickt wird
+        function toggleCustomInput(selectEl, customId) {
+            const customInput = document.getElementById(customId);
+            if(!selectEl.dataset.baseName) selectEl.dataset.baseName = selectEl.name; // Ursprünglichen Namen sichern
+            
+            if(selectEl.value === 'Sonstiges') {
+                customInput.classList.remove('hidden');
+                customInput.name = selectEl.dataset.baseName; // Input übernimmt den Versand-Namen
+                selectEl.removeAttribute('name'); // Select wird beim Senden ignoriert
+                customInput.required = true;
+            } else {
+                customInput.classList.add('hidden');
+                selectEl.name = selectEl.dataset.baseName; // Select hat wieder den Versand-Namen
+                customInput.removeAttribute('name');
+                customInput.required = false;
+            }
+        }
+
+        // --- ENTWÜRFE & SPEICHERN ---
+        function saveDraft() {
+            const kunde = document.getElementById('kunde_name').value || 'Unbenannter Entwurf';
+            const date = new Date().toLocaleDateString('de-DE');
+            const id = 'draft_' + Date.now();
+            
+            const formData = {};
+            document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(el => {
+                if (el.name && el.type !== 'file') {
+                    if (el.type === 'radio' || el.type === 'checkbox') formData[el.name + '_' + el.value] = el.checked;
+                    else formData[el.name] = el.value;
+                }
+            });
+            formData['saved_sketch'] = canvas.toDataURL();
+            formData['saved_mode'] = currentMode;
+
+            const draft = { id, kunde, date, data: formData };
+            let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+            drafts.push(draft);
+            localStorage.setItem('engler_drafts', JSON.stringify(drafts));
+            
+            alert('Entwurf erfolgreich lokal gespeichert!');
+            showDashboard();
+        }
+
+        function loadDrafts() {
+            const container = document.getElementById('drafts_list');
+            let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+            if(drafts.length === 0) {
+                container.innerHTML = '<p style="font-size: 0.9rem; color: #6b7280; text-align: center;">Keine Entwürfe lokal gespeichert.</p>';
+                return;
+            }
+            container.innerHTML = '';
+            drafts.forEach(d => {
+                container.innerHTML += `
+                <div class="draft-item">
+                    <div class="draft-info"><strong style="color:var(--primary-color);">${d.kunde}</strong><span style="font-size: 0.8rem; color: #6b7280; display:block;">Erstellt: ${d.date} (${d.data.saved_mode ? d.data.saved_mode.toUpperCase() : 'SHK'})</span></div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-info" onclick="resumeDraft('${d.id}')">✏️</button>
+                        <button type="button" class="btn-info btn-danger" onclick="deleteDraft('${d.id}')">🗑️</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function resumeDraft(id) {
+            let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+            const draft = drafts.find(d => d.id === id);
+            if(draft) {
+                const modeToLoad = draft.data['saved_mode'] || 'shk';
+                startNewForm(modeToLoad); 
+                
+                // Wir müssen zuerst die HK Felder aufbauen, falls es SHK ist
+                if(modeToLoad === 'shk' && draft.data['Heizkreise_Anzahl']) {
+                    document.getElementById('heizkreise').value = draft.data['Heizkreise_Anzahl'];
+                    generateHKFields();
+                }
+
+                for (const key in draft.data) {
+                    if(key === 'saved_sketch') { let img = new Image(); img.onload = function() { ctx.drawImage(img, 0, 0); }; img.src = draft.data[key]; continue; }
+                    if(key === 'saved_mode') continue;
+                    
+                    let el = document.getElementsByName(key)[0];
+                    if(!el) { // Entweder Radio/Checkbox oder Custom-Input das seinen Namen verloren hat
+                        // Suche Radio
+                        const parts = key.split('_'); const val = parts.pop(); const realName = parts.join('_');
+                        const radio = document.querySelector(`input[name="${realName}"][value="${val}"]`);
+                        if(radio) { radio.checked = draft.data[key]; continue; }
+                        
+                        // Wenn es kein Radio ist, müssen wir schauen ob es ein Select-Feld war, das einen benutzerdefinierten Wert hatte
+                        let hiddenSelect = document.querySelector(`select[data-base-name="${key}"]`);
+                        if(hiddenSelect) {
+                            hiddenSelect.value = 'Sonstiges';
+                            let custId = hiddenSelect.id.replace('sel_', 'cust_');
+                            toggleCustomInput(hiddenSelect, custId);
+                            document.getElementById(custId).value = draft.data[key];
+                        }
+                    } else {
+                        // Wenn es ein Select ist, prüfe ob der Wert existiert
+                        if(el.tagName === 'SELECT') {
+                            let optionExists = Array.from(el.options).some(o => o.value === draft.data[key]);
+                            if(optionExists) { el.value = draft.data[key]; }
+                            else {
+                                el.value = 'Sonstiges';
+                                let custId = el.id.replace('sel_', 'cust_');
+                                toggleCustomInput(el, custId);
+                                document.getElementById(custId).value = draft.data[key];
+                            }
+                        } else {
+                            el.value = draft.data[key];
+                        }
+                    }
+                }
+                
+                toggleWallboxSection(document.querySelector('input[name="Wallbox"]:checked')?.value === 'Ja');
+                togglePVSection(document.querySelector('input[name="PV_Anlage"]:checked')?.value === 'Ja');
+                toggleFinanzSection(document.querySelector('input[name="Finanzierung"]:checked')?.value === 'Ja');
+                
+                if(modeToLoad === 'shk') calculateHeizungLogik();
+                calculatePVLogik();
+            }
+        }
+
+        function deleteDraft(id) {
+            if(confirm('Entwurf wirklich löschen?')) {
+                let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+                drafts = drafts.filter(d => d.id !== id);
+                localStorage.setItem('engler_drafts', JSON.stringify(drafts));
+                loadDrafts();
+            }
+        }
+
+        // --- NAVIGATION ---
+        function navigateStep(currentStepId, direction) {
+            const currentIndex = activeSteps.indexOf(currentStepId);
+            
+            if(direction === 1) { 
+                const currentDiv = document.getElementById('step-' + currentStepId);
+                const inputs = currentDiv.querySelectorAll('input[required]:not(.hidden), select[required]:not(.hidden), textarea[required]:not(.hidden)');
+                let valid = true;
+                inputs.forEach(input => {
+                    // Ignoriere versteckte Inputs bei der Validierung
+                    if(input.style.display !== 'none' && !input.classList.contains('hidden')) {
+                        if (!input.checkValidity()) { input.reportValidity(); valid = false; }
+                    }
+                });
+                if (!valid) return;
+            }
+
+            const nextIndex = currentIndex + direction;
+            if(nextIndex >= 0 && nextIndex < activeSteps.length) {
+                document.getElementById('step-' + activeSteps[currentIndex]).classList.remove('active');
+                document.getElementById('step-' + activeSteps[nextIndex]).classList.add('active');
+                if(activeSteps[nextIndex] === 4) resizeCanvas(); 
+                updateProgress(activeSteps[nextIndex]);
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function updateProgress(stepNumber) {
+            const currentIndex = activeSteps.indexOf(stepNumber) + 1;
+            const percentage = (currentIndex / activeSteps.length) * 100;
+            document.getElementById('progress').style.width = percentage + '%';
+        }
+
+        // --- SCANNER & GPS ---
+        let html5QrcodeScanner;
+        function startScanner(targetId) {
+            document.getElementById('scanner_modal').style.display = 'block';
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 100} }, false);
+            html5QrcodeScanner.render((decodedText) => { document.getElementById(targetId).value = decodedText; closeScanner(); }, (error) => {});
+        }
+        function closeScanner() {
+            if(html5QrcodeScanner) html5QrcodeScanner.clear();
+            document.getElementById('scanner_modal').style.display = 'none';
+        }
+
+        function getGPSLocation() {
+            const btn = event.target; btn.innerText = "⏳ Suche Satelliten...";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        document.getElementById('gps_link').value = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`;
+                        btn.innerText = "📍 Standort erfolgreich erfasst!"; btn.style.background = "#10b981";
+                    },
+                    error => { alert("GPS Fehler."); btn.innerText = "📍 Aktuellen GPS-Standort abrufen"; }, { enableHighAccuracy: true, timeout: 10000 }
+                );
+            } else alert("GPS wird nicht unterstützt.");
+        }
+
+        function startDictation() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SR) {
+                const r = new SR(); r.lang = 'de-DE';
+                r.onstart = () => { document.getElementById('notizen').placeholder = "Zuhören..."; };
+                r.onresult = (e) => { document.getElementById('notizen').value += " " + e.results[0][0].transcript; };
+                r.start();
+            } else alert("Spracheingabe nicht unterstützt.");
+        }
+
+        // --- CANVAS ---
+        const canvas = document.getElementById('sketchpad'); const ctx = canvas.getContext('2d'); let painting = false;
+        function resizeCanvas() {
+            if(!canvas.parentElement) return;
+            canvas.width = canvas.parentElement.clientWidth; canvas.height = 300;
+            ctx.lineCap = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#ff6600';
+        }
+        window.addEventListener('resize', resizeCanvas);
+        function getMousePos(e) { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; }
+        function startPosition(e) { painting = true; draw(e); } function endPosition() { painting = false; ctx.beginPath(); }
+        function draw(e) { if (!painting) return; e.preventDefault(); const pos = getMousePos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
+        if(canvas) {
+            canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchend', endPosition); canvas.addEventListener('touchmove', draw, {passive: false});
+        }
+        function clearSketch() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        // --- DYNAMISCHE FELDER ---
+        function generateHKFields() {
+            if(currentMode === 'elektro') return;
+            const count = parseInt(document.getElementById('heizkreise')?.value) || 1;
+            const container = document.getElementById('hk_container');
+            if(!container) return;
+            container.innerHTML = '';
+            for(let i=1; i<=count; i++) {
+                container.innerHTML += `
+                <div style="background: var(--input-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent-color);">
+                    <label style="color: var(--primary-color); font-size: 1.05rem;"><strong>Heizkreis ${i}</strong></label>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col form-group">
+                            <label>Vorlauf (°C) *</label>
+                            <input type="number" name="HK${i}_VL" class="hk-vl" value="55" min="20" max="90" required>
+                        </div>
+                        <div class="col form-group">
+                            <label>Rohrdurchmesser *</label>
+                            <select id="sel_hk_${i}" name="HK${i}_Rohr" required onchange="toggleCustomInput(this, 'cust_hk_${i}')">
+                                <option value="">-- Auswählen --</option>
+                                <option value="22mm Kupfer (Cu)">22mm Kupfer (Cu)</option><option value="28mm Kupfer (Cu)">28mm Kupfer (Cu)</option>
+                                <option value="26mm Mehrschichtverbundrohr">26mm Mehrschichtverbundrohr</option><option value="32mm Mehrschichtverbundrohr">32mm Mehrschichtverbundrohr</option>
+                                <option value="28mm C-Stahl">28mm C-Stahl</option><option value="DN25 (1 Zoll Stahlrohr)">DN25 (1 Zoll Stahlrohr)</option>
+                                <option value="Sonstiges">Sonstiges (Händisch eintragen)</option>
+                            </select>
+                            <input type="text" id="cust_hk_${i}" class="hidden" placeholder="Rohr eintragen..." style="margin-top:8px;">
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        function showFileName(input, targetId) { if(input.files && input.files[0]) document.getElementById(targetId).innerText = "Anhang: " + input.files[0].name; }
+
+        function compressAndRenameImage(input, previewId, baseFilename) {
+            const container = document.getElementById(previewId); container.innerHTML = "";
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img'); img.src = e.target.result; container.appendChild(img);
+                }; reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- BERECHNUNGEN ---
+        let empfohleneBatterieGrosse = 0; // Globaler Speicher für den Batterie-Button
+
+        function calculateHeizungLogik() {
+            if(currentMode !== 'shk') return; 
+            const oel = parseFloat(document.getElementById('verb_oel')?.value) || 0; const gas = parseFloat(document.getElementById('verb_gas')?.value) || 0; const holz = parseFloat(document.getElementById('verb_holz')?.value) || 0;
+            const parteien = parseInt(document.getElementById('parteien')?.value) || 1; const wohnflaeche = parseFloat(document.getElementById('wohnflaeche')?.value) || 0;
+
+            const oelBox = document.getElementById('oeltank_details');
+            if(oelBox) { if (oel > 0) { oelBox.classList.remove('hidden'); document.getElementById('calc_demontage').classList.remove('hidden'); } else { oelBox.classList.add('hidden'); document.getElementById('calc_demontage').classList.add('hidden'); } }
+
+            let heizlast = 0; if (oel > 0) heizlast += oel / 250; if (gas > 0) heizlast += gas / 2500; if (holz > 0) heizlast += (holz * 1500) / 2500;
+            if (heizlast === 0 && wohnflaeche > 0) heizlast = (wohnflaeche * 70) / 1000;
+            const calcHeizlast = document.getElementById('calc_heizlast'); if(calcHeizlast) calcHeizlast.innerHTML = `Geschätzte Heizlast: <strong>${heizlast.toFixed(1)} kW</strong>`;
+
+            let speicherLiter = 300; if (parteien > 1) speicherLiter = 300 + (parteien - 1) * 150; else if (heizlast > 15) speicherLiter = 500;
+            const calcSpeicher = document.getElementById('calc_speicher'); if(calcSpeicher) calcSpeicher.innerHTML = `Empf. Pufferspeicher: <strong>${speicherLiter} Liter</strong>`;
+
+            if (oel > 0) {
+                const material = document.querySelector('input[name="Oeltank_Material"]:checked')?.value || "Kunststoff"; const liter = document.getElementById('oeltank_liter')?.value || 3000; const anzahl = document.getElementById('oeltank_anzahl')?.value || 3;
+                let aufwand = material === "Kunststoff" ? "Normaler Aufwand" : "Erhöhter Aufwand (Schweißen)";
+                const calcDemontage = document.getElementById('calc_demontage'); if(calcDemontage) calcDemontage.innerHTML = `Demontage Öltank: <strong>${aufwand} (${liter}L, ${anzahl} Stk.)</strong>`;
+            }
+        }
+
+        function togglePVSection(show) { const sec = document.getElementById('pv_section'); if (show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        function toggleWallboxSection(show) { const sec = document.getElementById('wallbox_section'); if (show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        function toggleFinanzSection(show) { const sec = document.getElementById('finanz_section'); if (show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+
+        function calculatePVLogik() {
+            const flaeche = parseFloat(document.getElementById('dachflaeche').value) || 0;
+            const richtung = document.getElementById('himmelsrichtung').value;
+            let kwp = flaeche * 0.2; let effizienz = 1.0;
+            if (richtung === "Osten" || richtung === "Westen") effizienz = 0.85; if (richtung === "Norden") effizienz = 0.5; if (richtung.includes("Süd")) effizienz = 0.95; if (richtung === "Süden") effizienz = 1.0;
+            const realKwp = kwp * effizienz;
+            document.getElementById('calc_pv_kwp').innerHTML = `Maximaler Ertrag: <strong>${realKwp.toFixed(1)} kWp</strong>`;
+            
+            let speicher = Math.round(realKwp);
+            if (speicher < 5) speicher = 5; if (speicher > 20) speicher = 20; if (flaeche === 0) speicher = 0;
+            
+            empfohleneBatterieGrosse = speicher; // Global speichern für den Button
+            document.getElementById('calc_pv_speicher_empf').innerHTML = `Empfohlener Speicher: <strong>${speicher} kWh</strong>`;
+        }
+
+        function applyRecommendedBattery() {
+            if(empfohleneBatterieGrosse > 0) {
+                document.getElementById('speicher_groesse').value = empfohleneBatterieGrosse;
+            }
+        }
+
+        // --- KOMPASS ---
+        let compassActive = false;
+        function startCompass() {
+            const txt = document.getElementById('compass_text');
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission().then(p => {
+                    if (p === 'granted') { window.addEventListener('deviceorientation', handleOrientation, true); compassActive = true; txt.innerText="Richtung: Messe live..."; } 
+                });
+            } else {
+                if ('ondeviceorientationabsolute' in window) { window.addEventListener('deviceorientationabsolute', handleOrientation, true); compassActive = true; txt.innerText="Richtung: Messe live..."; } 
+                else if ('ondeviceorientation' in window) { window.addEventListener('deviceorientation', handleOrientation, true); compassActive = true; txt.innerText="Richtung: Messe live..."; } 
+            }
+        }
+        function lockCompass() {
+            window.removeEventListener('deviceorientation', handleOrientation, true); window.removeEventListener('deviceorientationabsolute', handleOrientation, true);
+            if(compassActive) { document.getElementById('compass_text').innerHTML += ' <span style="color:green;">(Gespeichert!)</span>'; compassActive = false; }
+        }
+        function handleOrientation(event) {
+            let heading = event.alpha; if (event.webkitCompassHeading) heading = event.webkitCompassHeading;
+            if (heading === null || heading === undefined) return;
+            const degrees = Math.round(heading);
+            document.getElementById('compass_disc').style.transform = `rotate(${-degrees}deg)`;
+            let dirText = "Norden"; let selectVal = "Norden";
+            if (degrees >= 337.5 || degrees < 22.5) { dirText = "Norden (0°)"; selectVal = "Norden"; } else if (degrees >= 22.5 && degrees < 67.5) { dirText = "Nord-Ost (" + degrees + "°)"; selectVal = "Osten"; } else if (degrees >= 67.5 && degrees < 112.5) { dirText = "Osten (90°)"; selectVal = "Osten"; } else if (degrees >= 112.5 && degrees < 157.5) { dirText = "Süd-Ost (" + degrees + "°)"; selectVal = "Süd-Ost"; } else if (degrees >= 157.5 && degrees < 202.5) { dirText = "Süden (180°)"; selectVal = "Süden"; } else if (degrees >= 202.5 && degrees < 247.5) { dirText = "Süd-West (" + degrees + "°)"; selectVal = "Süd-West"; } else if (degrees >= 247.5 && degrees < 292.5) { dirText = "Westen (270°)"; selectVal = "Westen"; } else if (degrees >= 292.5 && degrees < 337.5) { dirText = "Nord-West (" + degrees + "°)"; selectVal = "Westen"; }
+            document.getElementById('compass_text').innerHTML = `Live: <strong>${dirText}</strong>`; document.getElementById('himmelsrichtung').value = selectVal; calculatePVLogik();
+        }
+
+        // --- Hilfsfunktion für den korrekten PDF/CSV Wert bei Custom Selects ---
+        function getFinalFieldValue(baseName) {
+            // Findet das Element, das aktuell wirklich diesen 'name' trägt
+            let el = document.querySelector(`[name="${baseName}"]`);
+            return el ? el.value : '--';
+        }
+
+        // --- PDF View & Download ---
+        function updatePDFView() {
+            document.getElementById('pdf_date').innerText = new Date().toLocaleDateString('de-DE');
+            document.getElementById('pdf_out_kunde').innerText = document.getElementById('kunde_name').value || '--';
+            document.getElementById('pdf_out_anschrift').innerText = document.getElementById('kunde_anschrift').value || '--';
+            document.getElementById('pdf_out_flaeche').innerText = (document.getElementById('wohnflaeche').value || '--') + ' m² / ' + (document.getElementById('parteien').value || '1') + ' WE';
+            document.getElementById('pdf_out_bearbeiter').innerText = document.getElementById('bearbeiter').value || '--';
+            const gps = document.getElementById('gps_link').value; document.getElementById('pdf_out_gps').innerHTML = gps ? `<a href="${gps}" style="color:blue;">Google Maps Link</a>` : '--';
+
+            if(currentMode === 'shk') {
+                const oel = document.getElementById('verb_oel').value; const gas = document.getElementById('verb_gas').value; const holz = document.getElementById('verb_holz').value;
+                let verbrText = ""; if (oel) verbrText += `Öl: ${oel} L `; if (gas) verbrText += `Gas: ${gas} kWh `; if (holz) verbrText += `Holz: ${holz} rm`;
+                document.getElementById('pdf_out_verbrauch').innerText = verbrText || '--';
+                document.getElementById('pdf_out_heizlast').innerText = document.getElementById('calc_heizlast').innerText;
+                document.getElementById('pdf_out_abgleich').innerText = document.querySelector('input[name="Thermostatventile_Voreinstellbar"]:checked').value === "Ja" ? "Nein" : "JA (Zwingend)";
+                
+                const hkTableBody = document.getElementById('pdf_out_hk_body'); hkTableBody.innerHTML = '';
+                const hkVls = document.querySelectorAll('.hk-vl');
+                for(let i = 0; i < hkVls.length; i++) {
+                    const tr = document.createElement('tr'); 
+                    const rohrValue = getFinalFieldValue(`HK${i+1}_Rohr`);
+                    tr.innerHTML = `<td>Heizkreis ${i+1}</td><td>${hkVls[i].value} °C</td><td>${rohrValue}</td>`; hkTableBody.appendChild(tr);
+                }
+
+                if (oel > 0) {
+                    document.getElementById('pdf_out_oeltank').innerText = `${document.querySelector('input[name="Oeltank_Material"]:checked').value}, ${document.getElementById('oeltank_liter').value}L`;
+                    document.getElementById('pdf_out_demontage_kosten').innerText = document.getElementById('calc_demontage').innerText;
+                } else {
+                    document.getElementById('pdf_out_oeltank').innerText = "Nein"; document.getElementById('pdf_out_demontage_kosten').innerText = "--";
+                }
+                document.getElementById('pdf_out_zirkulation').innerText = `${document.querySelector('input[name="Zirkulation"]:checked').value} / Sys: ${document.querySelector('input[name="Warmwasserpuffer_Art"]:checked').value}`;
+                document.getElementById('pdf_out_speicher_empf').innerText = document.getElementById('calc_speicher').innerText;
+            }
+
+            const zaehlerZustand = document.querySelector('input[name="Zaehlerschrank_Zustand"]:checked').value;
+            const hausanschluss = document.querySelector('input[name="Hausanschluss_Art"]:checked').value;
+            const snZaehler = document.getElementById('sn_zaehler').value || '--';
+            document.getElementById('pdf_out_zaehler').innerText = `Typ: ${hausanschluss} / ID: ${snZaehler} / Zustand: ${zaehlerZustand}`;
+            
+            // Kabel & Absicherung dynamisch holen
+            const kb = getFinalFieldValue('Zuleitung_Kabeltyp');
+            const si = getFinalFieldValue('Hauptabsicherung_Wert');
+            document.getElementById('pdf_out_kabel_sicherung').innerText = `Zuleitung: ${kb} / Absicherung: ${si}`;
+
+            const wallboxJa = document.querySelector('input[name="Wallbox"]:checked').value === 'Ja';
+            let wbText = "Wallbox: Nein";
+            if(wallboxJa) {
+                const wl = document.querySelector('input[name="Wallbox_Leitungsweg_m"]').value || '?';
+                const wd = document.querySelector('input[name="Wallbox_Durchbrueche_Anzahl"]').value || '?';
+                wbText = `Wallbox: Ja (ca. ${wl}m, ${wd} Durchbrüche)`;
+            }
+            document.getElementById('pdf_out_wallbox_sh').innerText = `${wbText} / SmartHome: ${document.querySelector('input[name="Smart_Home"]:checked').value}`;
+
+            if (document.querySelector('input[name="PV_Anlage"]:checked').value === "Ja") {
+                const dach = document.querySelector('select[name="PV_Dacheindeckung"]').value;
+                const geruest = document.querySelector('input[name="PV_Geruest"]:checked').value;
+                document.getElementById('pdf_out_pv_details').innerText = `JA. ${dach}, Gerüst: ${geruest}, ${document.getElementById('dachflaeche').value}m², ${document.getElementById('himmelsrichtung').value}. Speicher: ${document.getElementById('speicher_groesse').value || document.getElementById('speicher_groesse').placeholder} kWh`;
+            } else { document.getElementById('pdf_out_pv_details').innerText = "Nein"; }
+
+            document.getElementById('pdf_out_notes').innerText = document.getElementById('notizen').value || "Keine Notizen hinterlegt.";
+
+            const pdfSketch = document.getElementById('pdf_out_sketch');
+            if(canvas && currentMode === 'shk') {
+                pdfSketch.src = canvas.toDataURL('image/png'); pdfSketch.style.display = "block";
+            } else { pdfSketch.style.display = "none"; }
+        }
+
+        function downloadPDF() {
+            updatePDFView();
+            const element = document.getElementById('pdf-template');
+            const kunde = document.getElementById('kunde_name').value ? document.getElementById('kunde_name').value.replace(/\W/g, '_') : 'Kunde';
+            html2pdf().set({ margin: 10, filename: `Erfassung_${kunde}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
+        }
+
+        // --- SUBMIT ---
+        async function handleFormSubmit(event) {
+            event.preventDefault(); 
+            
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "⏳ Verarbeite Daten (PDF & CSV)...";
+            btn.disabled = true;
+
+            const kundeNameRaw = document.getElementById('kunde_name').value || 'Unbekannt';
+            const safeKundeName = kundeNameRaw.replace(/\W/g, '_'); 
+            const modeText = currentMode === 'elektro' ? 'ELEKTRO' : 'SHK';
+            document.getElementById('email_subject').value = `Erfassung [${modeText}]: ` + kundeNameRaw;
+
+            if(canvas) document.getElementById('hidden_sketch_data').value = canvas.toDataURL('image/png');
+
+            let csvContent = "Parameter;Wert\n";
+            document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(i => {
+                if(i.name && !i.name.startsWith('_') && i.type !== 'file' && i.type !== 'hidden') {
+                    if((i.type === 'radio' || i.type === 'checkbox') && !i.checked) return;
+                    let val = i.value.replace(/"/g, '""').replace(/(\r\n|\n|\r)/gm, " "); 
+                    csvContent += `"${i.name}";"${val}"\n`;
+                }
+            });
+            const csvBlob = new Blob(["\uFEFF"+csvContent], { type: 'text/csv;charset=utf-8;' });
+            const csvFile = new File([csvBlob], `Daten_${safeKundeName}.csv`, { type: "text/csv" });
+            const dtCsv = new DataTransfer(); dtCsv.items.add(csvFile);
+            document.getElementById('hidden_csv').files = dtCsv.files;
+
+            updatePDFView();
+            const element = document.getElementById('pdf-template');
+            try {
+                const pdfBlob = await html2pdf().set({ margin: 10, filename: `Protokoll_${safeKundeName}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).outputPdf('blob');
+                const pdfFile = new File([pdfBlob], `Protokoll_${safeKundeName}.pdf`, { type: "application/pdf" });
+                const dtPdf = new DataTransfer(); dtPdf.items.add(pdfFile);
+                document.getElementById('hidden_pdf').files = dtPdf.files;
+            } catch(e) {}
+
+            btn.innerText = "🚀 Sende...";
+            document.getElementById('mainForm').submit();
+        }
+
+        loadDrafts();
+    </script>
+</body>
+</html>
