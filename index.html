@@ -42,14 +42,9 @@
         /* FORMULARE & EINGABEN */
         .form-group { margin-bottom: 18px; width: 100%; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-color); }
-        input[type="text"], input[type="number"], select, textarea { 
-            width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; 
-            font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); 
-            min-height: 48px; /* Einheitliche Höhe für Inputs und Selects */
-        }
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); min-height: 48px; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--input-focus); }
         
-        /* Inline-Gruppen (Input + Button nebeneinander) */
         .input-group { display: flex; gap: 10px; align-items: stretch; }
         .input-group input { flex: 1; }
         .input-group .btn-info { margin: 0; white-space: nowrap; }
@@ -79,6 +74,7 @@
         .btn-info { background-color: var(--primary-color); color: white; padding: 10px 15px; font-size: 0.9rem; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; transition: 0.3s; }
         .btn-info:hover { background-color: var(--accent-color); color: #000; }
         .btn-danger { background-color: #ef4444; color: white; }
+        
         .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; width: 100%; }
         .btn-group .btn { flex: 1; margin-top: 0; min-width: 120px; }
         .hidden { display: none !important; }
@@ -108,21 +104,67 @@
         .compass-cardinal { position: absolute; font-weight: bold; font-size: 0.8rem; color: var(--text-color); }
         .north { top: 2px; left: 51px; color: red; } .east { top: 48px; right: 6px; } .south { bottom: 2px; left: 53px; } .west { top: 48px; left: 6px; }
 
-        /* PDF Layout */
-        #pdf-wrapper { position: absolute; left: -9999px; top: -9999px; width: 800px; background: white; z-index: -1; }
-        #pdf-template { padding: 40px; background: white; color: #000; }
-        .pdf-header { display: flex; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
-        .pdf-title { font-size: 24px; color: #ff6600; font-weight: bold; }
-        .pdf-company { text-align: right; font-size: 14px; color: #333; }
-        .pdf-section { margin-bottom: 25px; page-break-inside: avoid; }
-        .pdf-table tr { page-break-inside: avoid; }
-        .pdf-section h3 { font-size: 16px; color: #000; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 12px; }
-        .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; font-size: 12px; }
-        .pdf-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-        .pdf-table th, .pdf-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        .pdf-table th { background-color: #f1f1f1; color: #000; }
-        .pdf-notes { font-size: 12px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; margin-top: 5px; }
-        #pdf_out_sketch { max-width: 100%; max-height: 250px; display: none; margin-top: 10px; border: 1px solid #ccc;}
+        /* PROFESSIONELLES PDF LAYOUT (Optimiert gegen Seitensprünge) */
+        #pdf-wrapper { 
+            position: absolute; left: -9999px; top: -9999px; 
+            width: 750px; /* Passt perfekt auf A4 mit Rand */
+            background: white; z-index: -1; 
+        }
+        #pdf-template { 
+            padding: 10px; 
+            background: white; color: #000; 
+            font-family: Helvetica, Arial, sans-serif; 
+        }
+        .pdf-header { 
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            border-bottom: 3px solid #ff6600; 
+            padding-bottom: 15px; margin-bottom: 25px; 
+        }
+        .pdf-title { 
+            font-size: 26px; color: #000; font-weight: bold; 
+            text-transform: uppercase; letter-spacing: 1px; 
+        }
+        .pdf-company { 
+            text-align: right; font-size: 13px; color: #555; line-height: 1.4;
+        }
+        /* Vermeidet das Zerschneiden von Abschnitten und Tabellenreihen */
+        .pdf-section { 
+            margin-bottom: 25px; 
+            page-break-inside: avoid; 
+            break-inside: avoid; 
+        }
+        .pdf-section h3 { 
+            font-size: 15px; color: #fff; background-color: #000; 
+            padding: 6px 10px; margin-bottom: 12px; border-radius: 4px; 
+        }
+        .pdf-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; font-size: 13px; 
+        }
+        .pdf-table { 
+            width: 100%; border-collapse: collapse; margin-top: 10px; 
+            font-size: 12px; 
+            page-break-inside: avoid; break-inside: avoid; 
+        }
+        .pdf-table tr { 
+            page-break-inside: avoid; break-inside: avoid; 
+        }
+        .pdf-table th, .pdf-table td { 
+            border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top;
+        }
+        .pdf-table th { 
+            background-color: #f8f9fa; color: #000; font-weight: bold; 
+            border-bottom: 2px solid #ccc; 
+        }
+        .pdf-notes { 
+            font-size: 12px; padding: 12px; background: #fdfdfd; 
+            border: 1px solid #eee; margin-top: 5px; border-radius: 4px; 
+            min-height: 60px; 
+        }
+        #pdf_out_sketch { 
+            max-width: 100%; max-height: 300px; display: none; 
+            margin-top: 15px; border: 1px solid #ccc; border-radius: 4px; 
+            page-break-inside: avoid; break-inside: avoid;
+        }
     </style>
 </head>
 <body>
@@ -258,7 +300,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col form-group"><label>Gesamtkapazität (Liter)</label><input type="number" id="oeltank_liter" name="Oeltank_Liter" value="3000" oninput="calculateHeizungLogik()"></div>
+                                <div class="col form-group"><label>Gesamkapazität (Liter)</label><input type="number" id="oeltank_liter" name="Oeltank_Liter" value="3000" oninput="calculateHeizungLogik()"></div>
                                 <div class="col form-group"><label>Anzahl Tanks</label><input type="number" id="oeltank_anzahl" name="Oeltank_Anzahl" value="3" oninput="calculateHeizungLogik()"></div>
                             </div>
                         </div>
@@ -455,9 +497,12 @@
                                 <div class="col form-group">
                                     <label>Dacheindeckung</label>
                                     <select name="PV_Dacheindeckung">
-                                        <option value="Ziegel (Standard)">Ton-/Betonziegel</option><option value="Trapezblech">Trapezblech</option>
-                                        <option value="Flachdach">Flachdach</option><option value="Schiefer">Schiefer</option>
-                                        <option value="Welleternit (Asbestfrei)">Welleternit (Asbestfrei)</option><option value="Sonstiges">Sonstiges</option>
+                                        <option value="Ziegel (Standard)">Ton-/Betonziegel</option>
+                                        <option value="Trapezblech">Trapezblech</option>
+                                        <option value="Flachdach">Flachdach</option>
+                                        <option value="Schiefer">Schiefer</option>
+                                        <option value="Welleternit (Asbestfrei)">Welleternit (Asbestfrei)</option>
+                                        <option value="Sonstiges">Sonstiges</option>
                                     </select>
                                 </div>
                                 <div class="col form-group">
@@ -574,9 +619,17 @@
     <div id="pdf-wrapper">
         <div id="pdf-template">
             <div class="pdf-header">
-                <div><div class="pdf-title">TECHNISCHES PROTOKOLL</div><div style="font-size:12px; margin-top:5px; color:#475569;">Erstellt am: <span id="pdf_date"></span></div></div>
-                <div class="pdf-company"><strong>Die Englers GmbH</strong><br>Sanitär - Heizung - Klima - Elektro</div>
+                <div>
+                    <div class="pdf-title">TECHNISCHES PROTOKOLL</div>
+                    <div style="font-size:12px; margin-top:5px; color:#475569;">Erstellt am: <span id="pdf_date"></span></div>
+                </div>
+                <div class="pdf-company">
+                    <strong>Die Englers GmbH</strong><br>
+                    Sanitär - Heizung - Klima - Elektro<br>
+                    <span style="font-size: 11px; color:#777;">Profi-Erfassung Außendienst</span>
+                </div>
             </div>
+            
             <div class="pdf-section">
                 <h3>Allgemeine Projektdaten</h3>
                 <div class="pdf-grid">
@@ -622,22 +675,23 @@
                     </tbody>
                 </table>
             </div>
+            
             <div class="pdf-section">
                 <h3>Notizen & Skizze</h3>
                 <div class="pdf-notes" id="pdf_out_notes">Keine Notizen hinterlegt.</div>
                 <img id="pdf_out_sketch" src="" alt="Handskizze">
             </div>
+            
             <div class="pdf-section" style="margin-top:20px; padding-top:15px; border-top:1px solid #ccc;">
-                <div style="margin-top:30px; display:flex; justify-content:space-between; font-size:12px; color:#000;">
-                    <div>______________________________________<br>Unterschrift Bearbeiter</div>
-                    <div>______________________________________<br>Unterschrift Kunde</div>
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:12px; color:#000;">
+                    <div style="text-align: center;">______________________________________<br>Unterschrift Bearbeiter</div>
+                    <div style="text-align: center;">______________________________________<br>Unterschrift Kunde</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. Theme Logic ---
         function toggleTheme() {
             const html = document.documentElement;
             html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
@@ -653,143 +707,180 @@
         }
 
         function startNewForm(mode) {
-            currentMode = mode;
-            document.getElementById('app_mode').value = mode;
-            document.getElementById('mainForm').reset();
-            document.getElementById('gps_link').value = '';
-            
-            // Custom Inputs wieder verstecken und Selects bereinigen
-            document.querySelectorAll('select').forEach(sel => { if(sel.id && sel.id.startsWith('sel_')) { sel.name = sel.dataset.baseName || sel.name; sel.dataset.baseName = sel.name; } });
-            document.querySelectorAll('input.hidden[id^="cust_"]').forEach(inp => { input.classList.add('hidden'); input.removeAttribute('name'); });
+            try {
+                currentMode = mode;
+                document.getElementById('app_mode').value = mode;
+                document.getElementById('mainForm').reset();
+                document.getElementById('gps_link').value = '';
+                
+                document.querySelectorAll('select').forEach(sel => { 
+                    if(sel.id && sel.id.startsWith('sel_')) { 
+                        sel.name = sel.dataset.baseName || sel.name; 
+                        sel.dataset.baseName = sel.name; 
+                    } 
+                });
+                
+                document.querySelectorAll('input[id^="cust_"]').forEach(inp => { 
+                    inp.classList.add('hidden'); 
+                    inp.removeAttribute('name'); 
+                });
 
-            clearSketch();
-            
-            if(mode === 'elektro') {
-                activeSteps = [1, 5, 6]; 
-                document.getElementById('pdf_shk_block').style.display = 'none';
-                document.getElementById('shk_abschluss_details').style.display = 'none';
-            } else {
-                activeSteps = [1, 2, 3, 4, 5, 6]; 
-                document.getElementById('pdf_shk_block').style.display = 'block';
-                document.getElementById('shk_abschluss_details').style.display = 'block';
+                clearSketch();
+                
+                if(mode === 'elektro') {
+                    activeSteps = [1, 5, 6]; 
+                    document.getElementById('pdf_shk_block').style.display = 'none';
+                    document.getElementById('shk_abschluss_details').style.display = 'none';
+                } else {
+                    activeSteps = [1, 2, 3, 4, 5, 6]; 
+                    document.getElementById('pdf_shk_block').style.display = 'block';
+                    document.getElementById('shk_abschluss_details').style.display = 'block';
+                }
+                
+                document.getElementById('dashboard_view').classList.add('hidden');
+                document.getElementById('form_view').classList.remove('hidden');
+                
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                document.getElementById('step-' + activeSteps[0]).classList.add('active');
+                updateProgress(activeSteps[0]);
+                
+                if(mode === 'shk') generateHKFields();
+            } catch(e) {
+                console.error("Fehler beim Starten des Formulars:", e);
+                alert("Fehler beim Öffnen: " + e.message);
             }
-            
-            document.getElementById('dashboard_view').classList.add('hidden');
-            document.getElementById('form_view').classList.remove('hidden');
-            
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step-' + activeSteps[0]).classList.add('active');
-            updateProgress(activeSteps[0]);
-            
-            if(mode === 'shk') generateHKFields();
         }
 
-        // --- CUSTOM DROPDOWN LOGIK ---
-        // Dies tauscht das 'name' Attribut dynamisch, damit immer nur der richtige Wert an die E-Mail/CSV geschickt wird
         function toggleCustomInput(selectEl, customId) {
             const customInput = document.getElementById(customId);
-            if(!selectEl.dataset.baseName) selectEl.dataset.baseName = selectEl.name; // Ursprünglichen Namen sichern
+            if(!customInput) return;
+            if(!selectEl.dataset.baseName) selectEl.dataset.baseName = selectEl.name;
             
             if(selectEl.value === 'Sonstiges') {
                 customInput.classList.remove('hidden');
-                customInput.name = selectEl.dataset.baseName; // Input übernimmt den Versand-Namen
-                selectEl.removeAttribute('name'); // Select wird beim Senden ignoriert
+                customInput.name = selectEl.dataset.baseName;
+                selectEl.removeAttribute('name');
                 customInput.required = true;
             } else {
                 customInput.classList.add('hidden');
-                selectEl.name = selectEl.dataset.baseName; // Select hat wieder den Versand-Namen
+                selectEl.name = selectEl.dataset.baseName;
                 customInput.removeAttribute('name');
                 customInput.required = false;
             }
         }
 
-        // --- ENTWÜRFE & SPEICHERN ---
         function saveDraft() {
-            const kunde = document.getElementById('kunde_name').value || 'Unbenannter Entwurf';
-            const date = new Date().toLocaleDateString('de-DE');
-            const id = 'draft_' + Date.now();
-            
-            const formData = {};
-            document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(el => {
-                if (el.name && el.type !== 'file') {
-                    if (el.type === 'radio' || el.type === 'checkbox') formData[el.name + '_' + el.value] = el.checked;
-                    else formData[el.name] = el.value;
-                }
-            });
-            formData['saved_sketch'] = canvas.toDataURL();
-            formData['saved_mode'] = currentMode;
+            try {
+                const kunde = document.getElementById('kunde_name').value || 'Unbenannter Entwurf';
+                const date = new Date().toLocaleDateString('de-DE');
+                const id = 'draft_' + Date.now();
+                
+                const formData = {};
+                document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(el => {
+                    if (el.name && el.type !== 'file') {
+                        if (el.type === 'radio' || el.type === 'checkbox') formData[el.name + '_' + el.value] = el.checked;
+                        else formData[el.name] = el.value;
+                    }
+                });
+                
+                if(canvas) formData['saved_sketch'] = canvas.toDataURL();
+                formData['saved_mode'] = currentMode;
 
-            const draft = { id, kunde, date, data: formData };
-            let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
-            drafts.push(draft);
-            localStorage.setItem('engler_drafts', JSON.stringify(drafts));
-            
-            alert('Entwurf erfolgreich lokal gespeichert!');
-            showDashboard();
+                const draft = { id, kunde, date, data: formData };
+                let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+                drafts.push(draft);
+                localStorage.setItem('engler_drafts', JSON.stringify(drafts));
+                
+                alert('Entwurf erfolgreich lokal gespeichert!');
+                showDashboard();
+            } catch(e) {
+                alert("Speichern fehlgeschlagen. Privater Modus aktiv?");
+            }
         }
 
         function loadDrafts() {
-            const container = document.getElementById('drafts_list');
-            let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
-            if(drafts.length === 0) {
-                container.innerHTML = '<p style="font-size: 0.9rem; color: #6b7280; text-align: center;">Keine Entwürfe lokal gespeichert.</p>';
-                return;
+            try {
+                const container = document.getElementById('drafts_list');
+                let draftsStr = localStorage.getItem('engler_drafts');
+                let drafts = draftsStr ? JSON.parse(draftsStr) : [];
+                
+                if(drafts.length === 0) {
+                    container.innerHTML = '<p style="font-size: 0.9rem; color: #6b7280; text-align: center;">Keine Entwürfe lokal gespeichert.</p>';
+                    return;
+                }
+                container.innerHTML = '';
+                drafts.forEach(d => {
+                    container.innerHTML += `
+                    <div class="draft-item">
+                        <div class="draft-info">
+                            <strong style="color:var(--primary-color);">${d.kunde}</strong>
+                            <span style="font-size: 0.8rem; color: #6b7280; display:block;">Erstellt: ${d.date} (${d.data.saved_mode ? d.data.saved_mode.toUpperCase() : 'SHK'})</span>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" class="btn-info" onclick="resumeDraft('${d.id}')">✏️</button>
+                            <button type="button" class="btn-info btn-danger" onclick="deleteDraft('${d.id}')">🗑️</button>
+                        </div>
+                    </div>`;
+                });
+            } catch(e) {
+                console.warn("LocalStorage blockiert oder defekt", e);
+                document.getElementById('drafts_list').innerHTML = '<p style="color:red; text-align:center;">Speicherzugriff blockiert.</p>';
             }
-            container.innerHTML = '';
-            drafts.forEach(d => {
-                container.innerHTML += `
-                <div class="draft-item">
-                    <div class="draft-info"><strong style="color:var(--primary-color);">${d.kunde}</strong><span style="font-size: 0.8rem; color: #6b7280; display:block;">Erstellt: ${d.date} (${d.data.saved_mode ? d.data.saved_mode.toUpperCase() : 'SHK'})</span></div>
-                    <div style="display:flex; gap:8px;">
-                        <button type="button" class="btn-info" onclick="resumeDraft('${d.id}')">✏️</button>
-                        <button type="button" class="btn-info btn-danger" onclick="deleteDraft('${d.id}')">🗑️</button>
-                    </div>
-                </div>`;
-            });
         }
 
         function resumeDraft(id) {
-            let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
-            const draft = drafts.find(d => d.id === id);
-            if(draft) {
+            try {
+                let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+                const draft = drafts.find(d => d.id === id);
+                if(!draft) return;
+                
                 const modeToLoad = draft.data['saved_mode'] || 'shk';
                 startNewForm(modeToLoad); 
                 
-                // Wir müssen zuerst die HK Felder aufbauen, falls es SHK ist
                 if(modeToLoad === 'shk' && draft.data['Heizkreise_Anzahl']) {
                     document.getElementById('heizkreise').value = draft.data['Heizkreise_Anzahl'];
                     generateHKFields();
                 }
 
                 for (const key in draft.data) {
-                    if(key === 'saved_sketch') { let img = new Image(); img.onload = function() { ctx.drawImage(img, 0, 0); }; img.src = draft.data[key]; continue; }
+                    if(key === 'saved_sketch' && canvas && ctx) {
+                        let img = new Image();
+                        img.onload = function() { ctx.drawImage(img, 0, 0); };
+                        img.src = draft.data[key];
+                        continue;
+                    }
                     if(key === 'saved_mode') continue;
                     
                     let el = document.getElementsByName(key)[0];
-                    if(!el) { // Entweder Radio/Checkbox oder Custom-Input das seinen Namen verloren hat
-                        // Suche Radio
-                        const parts = key.split('_'); const val = parts.pop(); const realName = parts.join('_');
+                    if(!el) { 
+                        const parts = key.split('_'); 
+                        const val = parts.pop(); 
+                        const realName = parts.join('_');
                         const radio = document.querySelector(`input[name="${realName}"][value="${val}"]`);
-                        if(radio) { radio.checked = draft.data[key]; continue; }
+                        if(radio) { 
+                            radio.checked = draft.data[key]; 
+                            continue; 
+                        }
                         
-                        // Wenn es kein Radio ist, müssen wir schauen ob es ein Select-Feld war, das einen benutzerdefinierten Wert hatte
                         let hiddenSelect = document.querySelector(`select[data-base-name="${key}"]`);
                         if(hiddenSelect) {
                             hiddenSelect.value = 'Sonstiges';
                             let custId = hiddenSelect.id.replace('sel_', 'cust_');
                             toggleCustomInput(hiddenSelect, custId);
-                            document.getElementById(custId).value = draft.data[key];
+                            const ci = document.getElementById(custId);
+                            if(ci) ci.value = draft.data[key];
                         }
                     } else {
-                        // Wenn es ein Select ist, prüfe ob der Wert existiert
                         if(el.tagName === 'SELECT') {
                             let optionExists = Array.from(el.options).some(o => o.value === draft.data[key]);
-                            if(optionExists) { el.value = draft.data[key]; }
-                            else {
+                            if(optionExists) { 
+                                el.value = draft.data[key]; 
+                            } else {
                                 el.value = 'Sonstiges';
                                 let custId = el.id.replace('sel_', 'cust_');
                                 toggleCustomInput(el, custId);
-                                document.getElementById(custId).value = draft.data[key];
+                                const ci = document.getElementById(custId);
+                                if(ci) ci.value = draft.data[key];
                             }
                         } else {
                             el.value = draft.data[key];
@@ -797,25 +888,33 @@
                     }
                 }
                 
-                toggleWallboxSection(document.querySelector('input[name="Wallbox"]:checked')?.value === 'Ja');
-                togglePVSection(document.querySelector('input[name="PV_Anlage"]:checked')?.value === 'Ja');
-                toggleFinanzSection(document.querySelector('input[name="Finanzierung"]:checked')?.value === 'Ja');
+                const wbRadio = document.querySelector('input[name="Wallbox"]:checked');
+                toggleWallboxSection(wbRadio && wbRadio.value === 'Ja');
+                
+                const pvRadio = document.querySelector('input[name="PV_Anlage"]:checked');
+                togglePVSection(pvRadio && pvRadio.value === 'Ja');
+                
+                const finRadio = document.querySelector('input[name="Finanzierung"]:checked');
+                toggleFinanzSection(finRadio && finRadio.value === 'Ja');
                 
                 if(modeToLoad === 'shk') calculateHeizungLogik();
                 calculatePVLogik();
+            } catch(e) {
+                alert("Fehler beim Laden des Entwurfs.");
             }
         }
 
         function deleteDraft(id) {
             if(confirm('Entwurf wirklich löschen?')) {
-                let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
-                drafts = drafts.filter(d => d.id !== id);
-                localStorage.setItem('engler_drafts', JSON.stringify(drafts));
-                loadDrafts();
+                try {
+                    let drafts = JSON.parse(localStorage.getItem('engler_drafts') || '[]');
+                    drafts = drafts.filter(d => d.id !== id);
+                    localStorage.setItem('engler_drafts', JSON.stringify(drafts));
+                    loadDrafts();
+                } catch(e){}
             }
         }
 
-        // --- NAVIGATION ---
         function navigateStep(currentStepId, direction) {
             const currentIndex = activeSteps.indexOf(currentStepId);
             
@@ -824,9 +923,11 @@
                 const inputs = currentDiv.querySelectorAll('input[required]:not(.hidden), select[required]:not(.hidden), textarea[required]:not(.hidden)');
                 let valid = true;
                 inputs.forEach(input => {
-                    // Ignoriere versteckte Inputs bei der Validierung
                     if(input.style.display !== 'none' && !input.classList.contains('hidden')) {
-                        if (!input.checkValidity()) { input.reportValidity(); valid = false; }
+                        if (!input.checkValidity()) { 
+                            input.reportValidity(); 
+                            valid = false; 
+                        }
                     }
                 });
                 if (!valid) return;
@@ -848,12 +949,14 @@
             document.getElementById('progress').style.width = percentage + '%';
         }
 
-        // --- SCANNER & GPS ---
         let html5QrcodeScanner;
         function startScanner(targetId) {
             document.getElementById('scanner_modal').style.display = 'block';
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 100} }, false);
-            html5QrcodeScanner.render((decodedText) => { document.getElementById(targetId).value = decodedText; closeScanner(); }, (error) => {});
+            html5QrcodeScanner.render((decodedText) => { 
+                document.getElementById(targetId).value = decodedText; 
+                closeScanner(); 
+            }, (error) => {});
         }
         function closeScanner() {
             if(html5QrcodeScanner) html5QrcodeScanner.clear();
@@ -861,14 +964,21 @@
         }
 
         function getGPSLocation() {
-            const btn = event.target; btn.innerText = "⏳ Suche Satelliten...";
+            const btn = event.target; 
+            btn.innerText = "⏳ Suche Satelliten...";
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     position => {
-                        document.getElementById('gps_link').value = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`;
-                        btn.innerText = "📍 Standort erfolgreich erfasst!"; btn.style.background = "#10b981";
+                        const link = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
+                        document.getElementById('gps_link').value = link;
+                        btn.innerText = "📍 Standort erfolgreich erfasst!"; 
+                        btn.style.background = "#10b981";
                     },
-                    error => { alert("GPS Fehler."); btn.innerText = "📍 Aktuellen GPS-Standort abrufen"; }, { enableHighAccuracy: true, timeout: 10000 }
+                    error => { 
+                        alert("GPS Fehler."); 
+                        btn.innerText = "📍 Aktuellen GPS-Standort abrufen"; 
+                    }, 
+                    { enableHighAccuracy: true, timeout: 10000 }
                 );
             } else alert("GPS wird nicht unterstützt.");
         }
@@ -876,36 +986,67 @@
         function startDictation() {
             const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SR) {
-                const r = new SR(); r.lang = 'de-DE';
+                const r = new SR(); 
+                r.lang = 'de-DE';
                 r.onstart = () => { document.getElementById('notizen').placeholder = "Zuhören..."; };
                 r.onresult = (e) => { document.getElementById('notizen').value += " " + e.results[0][0].transcript; };
                 r.start();
             } else alert("Spracheingabe nicht unterstützt.");
         }
 
-        // --- CANVAS ---
-        const canvas = document.getElementById('sketchpad'); const ctx = canvas.getContext('2d'); let painting = false;
+        let canvas, ctx, painting = false;
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            canvas = document.getElementById('sketchpad'); 
+            if(canvas) {
+                ctx = canvas.getContext('2d');
+                canvas.addEventListener('mousedown', startPosition); 
+                canvas.addEventListener('mouseup', endPosition); 
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('touchstart', startPosition, {passive: false}); 
+                canvas.addEventListener('touchend', endPosition); 
+                canvas.addEventListener('touchmove', draw, {passive: false});
+            }
+        });
+
         function resizeCanvas() {
-            if(!canvas.parentElement) return;
-            canvas.width = canvas.parentElement.clientWidth; canvas.height = 300;
-            ctx.lineCap = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#ff6600';
+            if(!canvas || !canvas.parentElement) return;
+            canvas.width = canvas.parentElement.clientWidth; 
+            canvas.height = 300;
+            if(ctx) { ctx.lineCap = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#ff6600'; }
         }
         window.addEventListener('resize', resizeCanvas);
-        function getMousePos(e) { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; }
-        function startPosition(e) { painting = true; draw(e); } function endPosition() { painting = false; ctx.beginPath(); }
-        function draw(e) { if (!painting) return; e.preventDefault(); const pos = getMousePos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
-        if(canvas) {
-            canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchend', endPosition); canvas.addEventListener('touchmove', draw, {passive: false});
-        }
-        function clearSketch() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // --- DYNAMISCHE FELDER ---
+        function getMousePos(e) { 
+            const rect = canvas.getBoundingClientRect(); 
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX; 
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY; 
+            return { x: clientX - rect.left, y: clientY - rect.top }; 
+        }
+        function startPosition(e) { painting = true; draw(e); } 
+        function endPosition() { painting = false; if(ctx) ctx.beginPath(); }
+        function draw(e) { 
+            if (!painting || !ctx) return; 
+            e.preventDefault(); 
+            const pos = getMousePos(e); 
+            ctx.lineTo(pos.x, pos.y); 
+            ctx.stroke(); 
+            ctx.beginPath(); 
+            ctx.moveTo(pos.x, pos.y); 
+        }
+
+        function clearSketch() { 
+            if(ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        }
+
         function generateHKFields() {
             if(currentMode === 'elektro') return;
-            const count = parseInt(document.getElementById('heizkreise')?.value) || 1;
+            
+            const hkInput = document.getElementById('heizkreise');
+            const count = hkInput ? (parseInt(hkInput.value) || 1) : 1;
             const container = document.getElementById('hk_container');
             if(!container) return;
+            
             container.innerHTML = '';
             for(let i=1; i<=count; i++) {
                 container.innerHTML += `
@@ -920,9 +1061,12 @@
                             <label>Rohrdurchmesser *</label>
                             <select id="sel_hk_${i}" name="HK${i}_Rohr" required onchange="toggleCustomInput(this, 'cust_hk_${i}')">
                                 <option value="">-- Auswählen --</option>
-                                <option value="22mm Kupfer (Cu)">22mm Kupfer (Cu)</option><option value="28mm Kupfer (Cu)">28mm Kupfer (Cu)</option>
-                                <option value="26mm Mehrschichtverbundrohr">26mm Mehrschichtverbundrohr</option><option value="32mm Mehrschichtverbundrohr">32mm Mehrschichtverbundrohr</option>
-                                <option value="28mm C-Stahl">28mm C-Stahl</option><option value="DN25 (1 Zoll Stahlrohr)">DN25 (1 Zoll Stahlrohr)</option>
+                                <option value="22mm Kupfer (Cu)">22mm Kupfer (Cu)</option>
+                                <option value="28mm Kupfer (Cu)">28mm Kupfer (Cu)</option>
+                                <option value="26mm Mehrschichtverbundrohr">26mm Mehrschichtverbundrohr</option>
+                                <option value="32mm Mehrschichtverbundrohr">32mm Mehrschichtverbundrohr</option>
+                                <option value="28mm C-Stahl">28mm C-Stahl</option>
+                                <option value="DN25 (1 Zoll Stahlrohr)">DN25 (1 Zoll Stahlrohr)</option>
                                 <option value="Sonstiges">Sonstiges (Händisch eintragen)</option>
                             </select>
                             <input type="text" id="cust_hk_${i}" class="hidden" placeholder="Rohr eintragen..." style="margin-top:8px;">
@@ -932,190 +1076,402 @@
             }
         }
 
-        function showFileName(input, targetId) { if(input.files && input.files[0]) document.getElementById(targetId).innerText = "Anhang: " + input.files[0].name; }
+        function showFileName(input, targetId) { 
+            const t = document.getElementById(targetId);
+            if(t && input.files && input.files[0]) t.innerText = "Anhang: " + input.files[0].name; 
+        }
 
         function compressAndRenameImage(input, previewId, baseFilename) {
-            const container = document.getElementById(previewId); container.innerHTML = "";
+            const container = document.getElementById(previewId); 
+            if(!container) return;
+            container.innerHTML = "";
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = document.createElement('img'); img.src = e.target.result; container.appendChild(img);
-                }; reader.readAsDataURL(input.files[0]);
+                    const img = new Image();
+                    img.onload = function() {
+                        try {
+                            const canvasTemp = document.createElement('canvas');
+                            const ctxTemp = canvasTemp.getContext('2d');
+                            const MAX_DIM = 1600;
+                            let w = img.width; 
+                            let h = img.height;
+                            
+                            if (w > h) { 
+                                if (w > MAX_DIM) { h *= MAX_DIM / w; w = MAX_DIM; } 
+                            } else { 
+                                if (h > MAX_DIM) { w *= MAX_DIM / h; h = MAX_DIM; } 
+                            }
+                            canvasTemp.width = w; 
+                            canvasTemp.height = h;
+                            ctxTemp.drawImage(img, 0, 0, w, h);
+
+                            canvasTemp.toBlob(function(blob) {
+                                try {
+                                    const newFile = new File([blob], baseFilename + ".jpg", { type: "image/jpeg" });
+                                    const dataTransfer = new DataTransfer();
+                                    dataTransfer.items.add(newFile);
+                                    input.files = dataTransfer.files;
+                                } catch (err) {
+                                    console.warn("Gerät blockiert direkten Dateiaustausch.");
+                                }
+                                const previewImg = document.createElement('img');
+                                previewImg.src = URL.createObjectURL(blob);
+                                container.appendChild(previewImg);
+                            }, 'image/jpeg', 0.8); 
+                        } catch (err) {
+                            const previewImg = document.createElement('img');
+                            previewImg.src = e.target.result;
+                            container.appendChild(previewImg);
+                        }
+                    };
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // --- BERECHNUNGEN ---
-        let empfohleneBatterieGrosse = 0; // Globaler Speicher für den Batterie-Button
+        let empfohleneBatterieGrosse = 0; 
 
         function calculateHeizungLogik() {
             if(currentMode !== 'shk') return; 
-            const oel = parseFloat(document.getElementById('verb_oel')?.value) || 0; const gas = parseFloat(document.getElementById('verb_gas')?.value) || 0; const holz = parseFloat(document.getElementById('verb_holz')?.value) || 0;
-            const parteien = parseInt(document.getElementById('parteien')?.value) || 1; const wohnflaeche = parseFloat(document.getElementById('wohnflaeche')?.value) || 0;
+            
+            const oelEl = document.getElementById('verb_oel');
+            const oel = oelEl ? parseFloat(oelEl.value) || 0 : 0;
+            
+            const gasEl = document.getElementById('verb_gas');
+            const gas = gasEl ? parseFloat(gasEl.value) || 0 : 0; 
+            
+            const holzEl = document.getElementById('verb_holz');
+            const holz = holzEl ? parseFloat(holzEl.value) || 0 : 0;
+            
+            const partEl = document.getElementById('parteien');
+            const parteien = partEl ? parseInt(partEl.value) || 1 : 1; 
+            
+            const wflEl = document.getElementById('wohnflaeche');
+            const wohnflaeche = wflEl ? parseFloat(wflEl.value) || 0 : 0;
 
             const oelBox = document.getElementById('oeltank_details');
-            if(oelBox) { if (oel > 0) { oelBox.classList.remove('hidden'); document.getElementById('calc_demontage').classList.remove('hidden'); } else { oelBox.classList.add('hidden'); document.getElementById('calc_demontage').classList.add('hidden'); } }
+            const demBox = document.getElementById('calc_demontage');
+            if(oelBox && demBox) { 
+                if (oel > 0) { 
+                    oelBox.classList.remove('hidden'); 
+                    demBox.classList.remove('hidden'); 
+                } else { 
+                    oelBox.classList.add('hidden'); 
+                    demBox.classList.add('hidden'); 
+                } 
+            }
 
-            let heizlast = 0; if (oel > 0) heizlast += oel / 250; if (gas > 0) heizlast += gas / 2500; if (holz > 0) heizlast += (holz * 1500) / 2500;
+            let heizlast = 0; 
+            if (oel > 0) heizlast += oel / 250; 
+            if (gas > 0) heizlast += gas / 2500; 
+            if (holz > 0) heizlast += (holz * 1500) / 2500;
             if (heizlast === 0 && wohnflaeche > 0) heizlast = (wohnflaeche * 70) / 1000;
-            const calcHeizlast = document.getElementById('calc_heizlast'); if(calcHeizlast) calcHeizlast.innerHTML = `Geschätzte Heizlast: <strong>${heizlast.toFixed(1)} kW</strong>`;
+            
+            const calcHeizlast = document.getElementById('calc_heizlast'); 
+            if(calcHeizlast) calcHeizlast.innerHTML = `Geschätzte Heizlast: <strong>${heizlast.toFixed(1)} kW</strong>`;
 
-            let speicherLiter = 300; if (parteien > 1) speicherLiter = 300 + (parteien - 1) * 150; else if (heizlast > 15) speicherLiter = 500;
-            const calcSpeicher = document.getElementById('calc_speicher'); if(calcSpeicher) calcSpeicher.innerHTML = `Empf. Pufferspeicher: <strong>${speicherLiter} Liter</strong>`;
+            let speicherLiter = 300; 
+            if (parteien > 1) speicherLiter = 300 + (parteien - 1) * 150; 
+            else if (heizlast > 15) speicherLiter = 500;
+            
+            const calcSpeicher = document.getElementById('calc_speicher'); 
+            if(calcSpeicher) calcSpeicher.innerHTML = `Empf. Pufferspeicher: <strong>${speicherLiter} Liter</strong>`;
 
-            if (oel > 0) {
-                const material = document.querySelector('input[name="Oeltank_Material"]:checked')?.value || "Kunststoff"; const liter = document.getElementById('oeltank_liter')?.value || 3000; const anzahl = document.getElementById('oeltank_anzahl')?.value || 3;
+            if (oel > 0 && demBox) {
+                const matRad = document.querySelector('input[name="Oeltank_Material"]:checked');
+                const material = matRad ? matRad.value : "Kunststoff"; 
+                
+                const ltrEl = document.getElementById('oeltank_liter');
+                const liter = ltrEl ? ltrEl.value || 3000 : 3000; 
+                
+                const anzEl = document.getElementById('oeltank_anzahl');
+                const anzahl = anzEl ? anzEl.value || 3 : 3;
+                
                 let aufwand = material === "Kunststoff" ? "Normaler Aufwand" : "Erhöhter Aufwand (Schweißen)";
-                const calcDemontage = document.getElementById('calc_demontage'); if(calcDemontage) calcDemontage.innerHTML = `Demontage Öltank: <strong>${aufwand} (${liter}L, ${anzahl} Stk.)</strong>`;
+                demBox.innerHTML = `Demontage Öltank: <strong>${aufwand} (${liter}L, ${anzahl} Stk.)</strong>`;
             }
         }
 
-        function togglePVSection(show) { const sec = document.getElementById('pv_section'); if (show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
-        function toggleWallboxSection(show) { const sec = document.getElementById('wallbox_section'); if (show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
-        function toggleFinanzSection(show) { const sec = document.getElementById('finanz_section'); if (show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        function togglePVSection(show) { 
+            const sec = document.getElementById('pv_section'); 
+            if(sec) { if(show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        }
+        
+        function toggleWallboxSection(show) { 
+            const sec = document.getElementById('wallbox_section'); 
+            if(sec) { if(show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        }
+        
+        function toggleFinanzSection(show) { 
+            const sec = document.getElementById('finanz_section'); 
+            if(sec) { if(show) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        }
 
         function calculatePVLogik() {
-            const flaeche = parseFloat(document.getElementById('dachflaeche').value) || 0;
-            const richtung = document.getElementById('himmelsrichtung').value;
-            let kwp = flaeche * 0.2; let effizienz = 1.0;
-            if (richtung === "Osten" || richtung === "Westen") effizienz = 0.85; if (richtung === "Norden") effizienz = 0.5; if (richtung.includes("Süd")) effizienz = 0.95; if (richtung === "Süden") effizienz = 1.0;
+            const flEl = document.getElementById('dachflaeche');
+            const flaeche = flEl ? parseFloat(flEl.value) || 0 : 0;
+            
+            const rEl = document.getElementById('himmelsrichtung');
+            const richtung = rEl ? rEl.value : '';
+            
+            let kwp = flaeche * 0.2; 
+            let effizienz = 1.0;
+            
+            if (richtung === "Osten" || richtung === "Westen") effizienz = 0.85; 
+            if (richtung === "Norden") effizienz = 0.5; 
+            if (richtung.includes("Süd")) effizienz = 0.95; 
+            if (richtung === "Süden") effizienz = 1.0;
+            
             const realKwp = kwp * effizienz;
-            document.getElementById('calc_pv_kwp').innerHTML = `Maximaler Ertrag: <strong>${realKwp.toFixed(1)} kWp</strong>`;
+            const kwpBox = document.getElementById('calc_pv_kwp');
+            if(kwpBox) kwpBox.innerHTML = `Maximaler Ertrag: <strong>${realKwp.toFixed(1)} kWp</strong>`;
             
             let speicher = Math.round(realKwp);
-            if (speicher < 5) speicher = 5; if (speicher > 20) speicher = 20; if (flaeche === 0) speicher = 0;
+            if (speicher < 5) speicher = 5; 
+            if (speicher > 20) speicher = 20; 
+            if (flaeche === 0) speicher = 0;
             
-            empfohleneBatterieGrosse = speicher; // Global speichern für den Button
-            document.getElementById('calc_pv_speicher_empf').innerHTML = `Empfohlener Speicher: <strong>${speicher} kWh</strong>`;
+            empfohleneBatterieGrosse = speicher; 
+            const spBox = document.getElementById('calc_pv_speicher_empf');
+            if(spBox) spBox.innerHTML = `Empfohlener Speicher: <strong>${speicher} kWh</strong>`;
         }
 
         function applyRecommendedBattery() {
-            if(empfohleneBatterieGrosse > 0) {
-                document.getElementById('speicher_groesse').value = empfohleneBatterieGrosse;
+            const spGr = document.getElementById('speicher_groesse');
+            if(empfohleneBatterieGrosse > 0 && spGr) {
+                spGr.value = empfohleneBatterieGrosse;
             }
         }
 
-        // --- KOMPASS ---
         let compassActive = false;
         function startCompass() {
             const txt = document.getElementById('compass_text');
+            if(!txt) return;
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission().then(p => {
-                    if (p === 'granted') { window.addEventListener('deviceorientation', handleOrientation, true); compassActive = true; txt.innerText="Richtung: Messe live..."; } 
+                    if (p === 'granted') { 
+                        window.addEventListener('deviceorientation', handleOrientation, true); 
+                        compassActive = true; 
+                        txt.innerText="Richtung: Messe live..."; 
+                    } 
                 });
             } else {
-                if ('ondeviceorientationabsolute' in window) { window.addEventListener('deviceorientationabsolute', handleOrientation, true); compassActive = true; txt.innerText="Richtung: Messe live..."; } 
-                else if ('ondeviceorientation' in window) { window.addEventListener('deviceorientation', handleOrientation, true); compassActive = true; txt.innerText="Richtung: Messe live..."; } 
+                if ('ondeviceorientationabsolute' in window) { 
+                    window.addEventListener('deviceorientationabsolute', handleOrientation, true); 
+                    compassActive = true; 
+                    txt.innerText="Richtung: Messe live..."; 
+                } 
+                else if ('ondeviceorientation' in window) { 
+                    window.addEventListener('deviceorientation', handleOrientation, true); 
+                    compassActive = true; 
+                    txt.innerText="Richtung: Messe live..."; 
+                } 
             }
         }
+        
         function lockCompass() {
-            window.removeEventListener('deviceorientation', handleOrientation, true); window.removeEventListener('deviceorientationabsolute', handleOrientation, true);
-            if(compassActive) { document.getElementById('compass_text').innerHTML += ' <span style="color:green;">(Gespeichert!)</span>'; compassActive = false; }
+            window.removeEventListener('deviceorientation', handleOrientation, true); 
+            window.removeEventListener('deviceorientationabsolute', handleOrientation, true);
+            const txt = document.getElementById('compass_text');
+            if(compassActive && txt) { 
+                txt.innerHTML += ' <span style="color:green;">(Gespeichert!)</span>'; 
+                compassActive = false; 
+            }
         }
+        
         function handleOrientation(event) {
-            let heading = event.alpha; if (event.webkitCompassHeading) heading = event.webkitCompassHeading;
+            let heading = event.alpha; 
+            if (event.webkitCompassHeading) heading = event.webkitCompassHeading;
             if (heading === null || heading === undefined) return;
             const degrees = Math.round(heading);
-            document.getElementById('compass_disc').style.transform = `rotate(${-degrees}deg)`;
-            let dirText = "Norden"; let selectVal = "Norden";
-            if (degrees >= 337.5 || degrees < 22.5) { dirText = "Norden (0°)"; selectVal = "Norden"; } else if (degrees >= 22.5 && degrees < 67.5) { dirText = "Nord-Ost (" + degrees + "°)"; selectVal = "Osten"; } else if (degrees >= 67.5 && degrees < 112.5) { dirText = "Osten (90°)"; selectVal = "Osten"; } else if (degrees >= 112.5 && degrees < 157.5) { dirText = "Süd-Ost (" + degrees + "°)"; selectVal = "Süd-Ost"; } else if (degrees >= 157.5 && degrees < 202.5) { dirText = "Süden (180°)"; selectVal = "Süden"; } else if (degrees >= 202.5 && degrees < 247.5) { dirText = "Süd-West (" + degrees + "°)"; selectVal = "Süd-West"; } else if (degrees >= 247.5 && degrees < 292.5) { dirText = "Westen (270°)"; selectVal = "Westen"; } else if (degrees >= 292.5 && degrees < 337.5) { dirText = "Nord-West (" + degrees + "°)"; selectVal = "Westen"; }
-            document.getElementById('compass_text').innerHTML = `Live: <strong>${dirText}</strong>`; document.getElementById('himmelsrichtung').value = selectVal; calculatePVLogik();
+            
+            const disc = document.getElementById('compass_disc');
+            if(disc) disc.style.transform = `rotate(${-degrees}deg)`;
+            
+            let dirText = "Norden"; 
+            let selectVal = "Norden";
+            if (degrees >= 337.5 || degrees < 22.5) { dirText = "Norden (0°)"; selectVal = "Norden"; } 
+            else if (degrees >= 22.5 && degrees < 67.5) { dirText = "Nord-Ost (" + degrees + "°)"; selectVal = "Osten"; } 
+            else if (degrees >= 67.5 && degrees < 112.5) { dirText = "Osten (90°)"; selectVal = "Osten"; } 
+            else if (degrees >= 112.5 && degrees < 157.5) { dirText = "Süd-Ost (" + degrees + "°)"; selectVal = "Süd-Ost"; } 
+            else if (degrees >= 157.5 && degrees < 202.5) { dirText = "Süden (180°)"; selectVal = "Süden"; } 
+            else if (degrees >= 202.5 && degrees < 247.5) { dirText = "Süd-West (" + degrees + "°)"; selectVal = "Süd-West"; } 
+            else if (degrees >= 247.5 && degrees < 292.5) { dirText = "Westen (270°)"; selectVal = "Westen"; } 
+            else if (degrees >= 292.5 && degrees < 337.5) { dirText = "Nord-West (" + degrees + "°)"; selectVal = "Westen"; }
+            
+            const txt = document.getElementById('compass_text');
+            if(txt) txt.innerHTML = `Live: <strong>${dirText}</strong>`; 
+            
+            const hr = document.getElementById('himmelsrichtung');
+            if(hr) hr.value = selectVal; 
+            
+            calculatePVLogik();
         }
 
-        // --- Hilfsfunktion für den korrekten PDF/CSV Wert bei Custom Selects ---
         function getFinalFieldValue(baseName) {
-            // Findet das Element, das aktuell wirklich diesen 'name' trägt
             let el = document.querySelector(`[name="${baseName}"]`);
             return el ? el.value : '--';
         }
 
-        // --- PDF View & Download ---
         function updatePDFView() {
             document.getElementById('pdf_date').innerText = new Date().toLocaleDateString('de-DE');
             document.getElementById('pdf_out_kunde').innerText = document.getElementById('kunde_name').value || '--';
             document.getElementById('pdf_out_anschrift').innerText = document.getElementById('kunde_anschrift').value || '--';
             document.getElementById('pdf_out_flaeche').innerText = (document.getElementById('wohnflaeche').value || '--') + ' m² / ' + (document.getElementById('parteien').value || '1') + ' WE';
             document.getElementById('pdf_out_bearbeiter').innerText = document.getElementById('bearbeiter').value || '--';
-            const gps = document.getElementById('gps_link').value; document.getElementById('pdf_out_gps').innerHTML = gps ? `<a href="${gps}" style="color:blue;">Google Maps Link</a>` : '--';
+            
+            const gps = document.getElementById('gps_link').value; 
+            document.getElementById('pdf_out_gps').innerHTML = gps ? `<a href="${gps}" style="color:blue;">Google Maps Link</a>` : '--';
 
             if(currentMode === 'shk') {
-                const oel = document.getElementById('verb_oel').value; const gas = document.getElementById('verb_gas').value; const holz = document.getElementById('verb_holz').value;
-                let verbrText = ""; if (oel) verbrText += `Öl: ${oel} L `; if (gas) verbrText += `Gas: ${gas} kWh `; if (holz) verbrText += `Holz: ${holz} rm`;
-                document.getElementById('pdf_out_verbrauch').innerText = verbrText || '--';
-                document.getElementById('pdf_out_heizlast').innerText = document.getElementById('calc_heizlast').innerText;
-                document.getElementById('pdf_out_abgleich').innerText = document.querySelector('input[name="Thermostatventile_Voreinstellbar"]:checked').value === "Ja" ? "Nein" : "JA (Zwingend)";
+                const oelEl = document.getElementById('verb_oel');
+                const oel = oelEl ? oelEl.value : "";
                 
-                const hkTableBody = document.getElementById('pdf_out_hk_body'); hkTableBody.innerHTML = '';
+                const gasEl = document.getElementById('verb_gas');
+                const gas = gasEl ? gasEl.value : "";
+                
+                const holzEl = document.getElementById('verb_holz');
+                const holz = holzEl ? holzEl.value : "";
+
+                let verbrText = ""; 
+                if (oel) verbrText += `Öl: ${oel} L `; 
+                if (gas) verbrText += `Gas: ${gas} kWh `; 
+                if (holz) verbrText += `Holz: ${holz} rm`;
+                
+                document.getElementById('pdf_out_verbrauch').innerText = verbrText || '--';
+                
+                const ch = document.getElementById('calc_heizlast');
+                document.getElementById('pdf_out_heizlast').innerHTML = ch ? ch.innerHTML : '--';
+                
+                const therm = document.querySelector('input[name="Thermostatventile_Voreinstellbar"]:checked');
+                document.getElementById('pdf_out_abgleich').innerText = (therm && therm.value === "Ja") ? "Nein" : "JA (Zwingend)";
+                
+                const hkTableBody = document.getElementById('pdf_out_hk_body'); 
+                hkTableBody.innerHTML = '';
                 const hkVls = document.querySelectorAll('.hk-vl');
                 for(let i = 0; i < hkVls.length; i++) {
                     const tr = document.createElement('tr'); 
                     const rohrValue = getFinalFieldValue(`HK${i+1}_Rohr`);
-                    tr.innerHTML = `<td>Heizkreis ${i+1}</td><td>${hkVls[i].value} °C</td><td>${rohrValue}</td>`; hkTableBody.appendChild(tr);
+                    tr.innerHTML = `<td>Heizkreis ${i+1}</td><td>${hkVls[i].value} °C</td><td>${rohrValue}</td>`; 
+                    hkTableBody.appendChild(tr);
                 }
 
                 if (oel > 0) {
-                    document.getElementById('pdf_out_oeltank').innerText = `${document.querySelector('input[name="Oeltank_Material"]:checked').value}, ${document.getElementById('oeltank_liter').value}L`;
-                    document.getElementById('pdf_out_demontage_kosten').innerText = document.getElementById('calc_demontage').innerText;
+                    const om = document.querySelector('input[name="Oeltank_Material"]:checked');
+                    const ol = document.getElementById('oeltank_liter');
+                    document.getElementById('pdf_out_oeltank').innerText = `${om ? om.value : ''}, ${ol ? ol.value : ''}L`;
+                    const cdem = document.getElementById('calc_demontage');
+                    document.getElementById('pdf_out_demontage_kosten').innerHTML = cdem ? cdem.innerHTML : '--';
                 } else {
-                    document.getElementById('pdf_out_oeltank').innerText = "Nein"; document.getElementById('pdf_out_demontage_kosten').innerText = "--";
+                    document.getElementById('pdf_out_oeltank').innerText = "Nein"; 
+                    document.getElementById('pdf_out_demontage_kosten').innerText = "--";
                 }
-                document.getElementById('pdf_out_zirkulation').innerText = `${document.querySelector('input[name="Zirkulation"]:checked').value} / Sys: ${document.querySelector('input[name="Warmwasserpuffer_Art"]:checked').value}`;
-                document.getElementById('pdf_out_speicher_empf').innerText = document.getElementById('calc_speicher').innerText;
+                
+                const zirk = document.querySelector('input[name="Zirkulation"]:checked');
+                const ww = document.querySelector('input[name="Warmwasserpuffer_Art"]:checked');
+                document.getElementById('pdf_out_zirkulation').innerText = `${zirk ? zirk.value : ''} / Sys: ${ww ? ww.value : ''}`;
+                
+                const cs = document.getElementById('calc_speicher');
+                document.getElementById('pdf_out_speicher_empf').innerHTML = cs ? cs.innerHTML : '--';
             }
 
-            const zaehlerZustand = document.querySelector('input[name="Zaehlerschrank_Zustand"]:checked').value;
-            const hausanschluss = document.querySelector('input[name="Hausanschluss_Art"]:checked').value;
-            const snZaehler = document.getElementById('sn_zaehler').value || '--';
-            document.getElementById('pdf_out_zaehler').innerText = `Typ: ${hausanschluss} / ID: ${snZaehler} / Zustand: ${zaehlerZustand}`;
+            const zZ = document.querySelector('input[name="Zaehlerschrank_Zustand"]:checked');
+            const hA = document.querySelector('input[name="Hausanschluss_Art"]:checked');
+            const snZaehler = document.getElementById('sn_zaehler');
             
-            // Kabel & Absicherung dynamisch holen
+            const zaehlerZustand = zZ ? zZ.value : '--';
+            const hausanschluss = hA ? hA.value : '--';
+            const snz = snZaehler ? snZaehler.value : '--';
+            document.getElementById('pdf_out_zaehler').innerText = `Typ: ${hausanschluss} / ID: ${snz} / Zustand: ${zaehlerZustand}`;
+            
             const kb = getFinalFieldValue('Zuleitung_Kabeltyp');
             const si = getFinalFieldValue('Hauptabsicherung_Wert');
             document.getElementById('pdf_out_kabel_sicherung').innerText = `Zuleitung: ${kb} / Absicherung: ${si}`;
 
-            const wallboxJa = document.querySelector('input[name="Wallbox"]:checked').value === 'Ja';
+            const wallboxJa = document.querySelector('input[name="Wallbox"]:checked');
             let wbText = "Wallbox: Nein";
-            if(wallboxJa) {
-                const wl = document.querySelector('input[name="Wallbox_Leitungsweg_m"]').value || '?';
-                const wd = document.querySelector('input[name="Wallbox_Durchbrueche_Anzahl"]').value || '?';
-                wbText = `Wallbox: Ja (ca. ${wl}m, ${wd} Durchbrüche)`;
+            if(wallboxJa && wallboxJa.value === 'Ja') {
+                const wl = document.querySelector('input[name="Wallbox_Leitungsweg_m"]');
+                const wd = document.querySelector('input[name="Wallbox_Durchbrueche_Anzahl"]');
+                wbText = `Wallbox: Ja (ca. ${wl ? wl.value : '?'}m, ${wd ? wd.value : '?'} Durchbrüche)`;
             }
-            document.getElementById('pdf_out_wallbox_sh').innerText = `${wbText} / SmartHome: ${document.querySelector('input[name="Smart_Home"]:checked').value}`;
+            const sh = document.querySelector('input[name="Smart_Home"]:checked');
+            document.getElementById('pdf_out_wallbox_sh').innerText = `${wbText} / SmartHome: ${sh ? sh.value : '--'}`;
 
-            if (document.querySelector('input[name="PV_Anlage"]:checked').value === "Ja") {
-                const dach = document.querySelector('select[name="PV_Dacheindeckung"]').value;
-                const geruest = document.querySelector('input[name="PV_Geruest"]:checked').value;
-                document.getElementById('pdf_out_pv_details').innerText = `JA. ${dach}, Gerüst: ${geruest}, ${document.getElementById('dachflaeche').value}m², ${document.getElementById('himmelsrichtung').value}. Speicher: ${document.getElementById('speicher_groesse').value || document.getElementById('speicher_groesse').placeholder} kWh`;
-            } else { document.getElementById('pdf_out_pv_details').innerText = "Nein"; }
+            const pva = document.querySelector('input[name="PV_Anlage"]:checked');
+            if (pva && pva.value === "Ja") {
+                const dach = document.querySelector('select[name="PV_Dacheindeckung"]');
+                const geruest = document.querySelector('input[name="PV_Geruest"]:checked');
+                const dfl = document.getElementById('dachflaeche');
+                const hr = document.getElementById('himmelsrichtung');
+                const spg = document.getElementById('speicher_groesse');
+                
+                const dVal = dach ? dach.value : '';
+                const gVal = geruest ? geruest.value : '';
+                const flVal = dfl ? dfl.value : '';
+                const hrVal = hr ? hr.value : '';
+                const spgVal = spg ? (spg.value || spg.placeholder) : '';
 
-            document.getElementById('pdf_out_notes').innerText = document.getElementById('notizen').value || "Keine Notizen hinterlegt.";
+                document.getElementById('pdf_out_pv_details').innerText = `JA. ${dVal}, Gerüst: ${gVal}, ${flVal}m², ${hrVal}. Speicher: ${spgVal} kWh`;
+            } else { 
+                document.getElementById('pdf_out_pv_details').innerText = "Nein"; 
+            }
+
+            const notizen = document.getElementById('notizen');
+            document.getElementById('pdf_out_notes').innerText = (notizen && notizen.value) ? notizen.value : "Keine Notizen hinterlegt.";
 
             const pdfSketch = document.getElementById('pdf_out_sketch');
             if(canvas && currentMode === 'shk') {
-                pdfSketch.src = canvas.toDataURL('image/png'); pdfSketch.style.display = "block";
-            } else { pdfSketch.style.display = "none"; }
+                pdfSketch.src = canvas.toDataURL('image/png'); 
+                pdfSketch.style.display = "block";
+            } else { 
+                pdfSketch.style.display = "none"; 
+            }
         }
 
         function downloadPDF() {
-            updatePDFView();
-            const element = document.getElementById('pdf-template');
-            const kunde = document.getElementById('kunde_name').value ? document.getElementById('kunde_name').value.replace(/\W/g, '_') : 'Kunde';
-            html2pdf().set({ margin: 10, filename: `Erfassung_${kunde}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
+            try {
+                updatePDFView();
+                const element = document.getElementById('pdf-template');
+                const kName = document.getElementById('kunde_name');
+                const kunde = (kName && kName.value) ? kName.value.replace(/\W/g, '_') : 'Kunde';
+                
+                const pdfOptions = { 
+                    margin: [15, 10, 15, 10], // Oben, Rechts, Unten, Links in mm
+                    filename: `Erfassung_${kunde}.pdf`, 
+                    image: { type: 'jpeg', quality: 1.0 }, 
+                    html2canvas: { scale: 2, useCORS: true, letterRendering: true }, 
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['css', 'legacy'] } // Verhindert zerschnittene Textblöcke!
+                };
+                
+                html2pdf().set(pdfOptions).from(element).save();
+            } catch(e) {
+                alert("Fehler bei der PDF-Erstellung.");
+            }
         }
 
-        // --- SUBMIT ---
         async function handleFormSubmit(event) {
             event.preventDefault(); 
             
             const btn = document.getElementById('submitBtn');
+            if(!btn) return;
+
             btn.innerText = "⏳ Verarbeite Daten (PDF & CSV)...";
             btn.disabled = true;
 
-            const kundeNameRaw = document.getElementById('kunde_name').value || 'Unbekannt';
+            const kName = document.getElementById('kunde_name');
+            const kundeNameRaw = (kName && kName.value) ? kName.value : 'Unbekannt';
             const safeKundeName = kundeNameRaw.replace(/\W/g, '_'); 
             const modeText = currentMode === 'elektro' ? 'ELEKTRO' : 'SHK';
-            document.getElementById('email_subject').value = `Erfassung [${modeText}]: ` + kundeNameRaw;
+            
+            const eSubj = document.getElementById('email_subject');
+            if(eSubj) eSubj.value = `Erfassung [${modeText}]: ` + kundeNameRaw;
 
-            if(canvas) document.getElementById('hidden_sketch_data').value = canvas.toDataURL('image/png');
+            const hSketch = document.getElementById('hidden_sketch_data');
+            if(canvas && hSketch) hSketch.value = canvas.toDataURL('image/png');
 
             let csvContent = "Parameter;Wert\n";
             document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(i => {
@@ -1125,25 +1481,48 @@
                     csvContent += `"${i.name}";"${val}"\n`;
                 }
             });
-            const csvBlob = new Blob(["\uFEFF"+csvContent], { type: 'text/csv;charset=utf-8;' });
-            const csvFile = new File([csvBlob], `Daten_${safeKundeName}.csv`, { type: "text/csv" });
-            const dtCsv = new DataTransfer(); dtCsv.items.add(csvFile);
-            document.getElementById('hidden_csv').files = dtCsv.files;
-
-            updatePDFView();
-            const element = document.getElementById('pdf-template');
+            
             try {
-                const pdfBlob = await html2pdf().set({ margin: 10, filename: `Protokoll_${safeKundeName}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).outputPdf('blob');
-                const pdfFile = new File([pdfBlob], `Protokoll_${safeKundeName}.pdf`, { type: "application/pdf" });
-                const dtPdf = new DataTransfer(); dtPdf.items.add(pdfFile);
-                document.getElementById('hidden_pdf').files = dtPdf.files;
+                const csvBlob = new Blob(["\uFEFF"+csvContent], { type: 'text/csv;charset=utf-8;' });
+                const csvFile = new File([csvBlob], `Daten_${safeKundeName}.csv`, { type: "text/csv" });
+                const dtCsv = new DataTransfer(); 
+                dtCsv.items.add(csvFile);
+                const hCsv = document.getElementById('hidden_csv');
+                if(hCsv) hCsv.files = dtCsv.files;
             } catch(e) {}
+
+            try {
+                updatePDFView();
+                const element = document.getElementById('pdf-template');
+                
+                const pdfOptions = { 
+                    margin: [15, 10, 15, 10],
+                    filename: `Protokoll_${safeKundeName}.pdf`, 
+                    image: { type: 'jpeg', quality: 1.0 }, 
+                    html2canvas: { scale: 2, useCORS: true, letterRendering: true }, 
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['css', 'legacy'] } // Garantiert schöne Seitenumbrüche!
+                };
+                
+                const pdfBlob = await html2pdf().set(pdfOptions).from(element).outputPdf('blob');
+                const pdfFile = new File([pdfBlob], `Protokoll_${safeKundeName}.pdf`, { type: "application/pdf" });
+                
+                const dtPdf = new DataTransfer(); 
+                dtPdf.items.add(pdfFile);
+                const hPdf = document.getElementById('hidden_pdf');
+                if(hPdf) hPdf.files = dtPdf.files;
+            } catch(e) {
+                console.warn("PDF für den Upload konnte nicht erstellt werden", e);
+            }
 
             btn.innerText = "🚀 Sende...";
             document.getElementById('mainForm').submit();
         }
 
-        loadDrafts();
+        // Sicherer initialer Aufruf beim Start
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDrafts();
+        });
     </script>
 </body>
 </html>
